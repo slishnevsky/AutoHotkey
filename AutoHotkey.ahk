@@ -1,7 +1,7 @@
 #Persistent
 #SingleInstance force
 
-playback := "Headset Earphone"
+playback := "Headset"
 recording := "Headset Microphone"
 
 F1::
@@ -15,16 +15,16 @@ F1::
 Return
 
 F2::
-	If (playback = "Headset Earphone") {
+	If (playback = "Headset") {
 		playback := "TV"
-		recording := "Microphone"
+		recording := "Webcam Microphone"
 	}
 	Else If (playback = "TV") {
 		playback := "Speakers"
-		recording := "Microphone"
+		recording := "Webcam Microphone"
 	}
 	Else If (playback = "Speakers") {
-		playback := "Headset Earphone"
+		playback := "Headset"
 		recording := "Headset Microphone"
 	}
 	run, nircmd.exe setdefaultsounddevice "%playback%"
