@@ -7,10 +7,12 @@
 ; Kills AutoHotkey process
 ; -------------------------------------------------------------------------------
 #HotIf ProcessExist("AutoHotkey64.exe")
-Pause:: Reload()
+^Esc:: Reload()
 #HotIf
 
-::aa:: autohotkey v2 ; Shortcut to this text
+::ahk:: AutoHotkey v2 ; Shortcut to this text
+::sli:: slishnevsky@gmail.com ; Shortcut to this text
+::dp:: dpenetration23@gmail.com ; Shortcut to this text
 
 Color_Primary := "5573B5"
 Color_Danger := "BE5A52"
@@ -20,27 +22,13 @@ Color_Success := "7CBB5F"
 ; -------------------------------------------------------------------------------
 ShowMessageBox(message, completed := false) {
   MyGui := Gui("-Caption")
-  MyGui.BackColor := completed ? Color_Success : Color_Primary
+  MyGui.BackColor := completed ? Color_Success : Color_Danger
   MyGui.SetFont("s20 cWhite", "Bahnschrift")
   MyGui.AddText("Center", message)
   MyGui.Show()
   Sleep(completed ? 3000 : 1000)
   MyGui.Hide()
 }
-
-; -------------------------------------------------------------------------------
-; Folder selection window
-; -------------------------------------------------------------------------------
-#HotIf WinActive("ahk_id" MyGui.Hwnd)
-Enter::
-NumpadEnter:: MyGui.Value := MyGui.Submit()
-#HotIf
-
-MyGui := Gui("AlwaysOnTop", "Folder")
-MyGui.SetFont("s10", "Bahnschrift")
-MyGui.AddText(, "Select your folder")
-MyListBox := MyGui.AddListBox("r7 Choose1 w200", ["America", "Canada", "Faggots", "Globalists", "Islam", "Niggers", "Religion"])
-MyGui.Value := 0
 
 ; -------------------------------------------------------------------------------
 ; PostTwitterPictures
@@ -56,16 +44,14 @@ MyGui.Value := 0
 ^!v:: PostTwitterVideos()
 #HotIf
 PostTwitterImages(folderName) {
-  ; MyGui.Show() ; Folder selection
-  ; while (!MyGui.Value)
-  ;   Sleep(100)
-  ; folderName := MyListBox.Text
+  position := CaretGetPos(&X, &Y)
   folderPath := "d:\Pictures\Web\" folderName
   totalImages := 0
   loop files folderPath "\*.png" ; Count total number of images
     totalImages += 1
   ShowMessageBox("Found " totalImages " images")
   loop files folderPath "\*.png" { ; Loop through all images in the folder
+    ; Get current position
     ShowMessageBox("Posting image " A_Index " of " totalImages)
     wc := WinClip()
     wc.Clear()
@@ -91,7 +77,6 @@ PostTwitterVideos() {
     "Message from a Saudi Writer to the Palestinians https://www.youtube.com/watch?v=KubPCfmEXyw", ; Message from a Saudi Writer to the Palestinians
     "Pallywood: Truth and falsehoods about the Israeli-Palestinian conflict https://www.youtube.com/watch?v=2OJpZVSssSI" ; Pallywood: Truth and falsehoods about the Israeli-Palestinian conflict
     "https://x.com/dpenetration24/status/1790854460966678585", ; The representatives of True Islam
-    "https://x.com/dpenetration24/status/1790854643158823178", ; Представители Истинного Ислама
     "https://x.com/dpenetration24/status/1790887784623845588", ; I hate you and I will kill you for the sake of Allah
     "https://x.com/dpenetration24/status/1791749925543215514", ; Remember this girl?
     "https://x.com/dpenetration24/status/1790888626802270379", ; Canada under Trudeau's regime
@@ -118,34 +103,6 @@ PostTwitterVideos() {
   }
   ShowMessageBox("Task completed. Posted " messages.Length " messages.", true)
   Reload()
-}
-
-; -------------------------------------------------------------------------------
-; DeleteRumbleVideos
-; -------------------------------------------------------------------------------
-#HotIf WinActive('ahk_exe Chrome.exe')
-^!d:: DeleteRumbleVideos()
-#HotIf
-DeleteRumbleVideos() {
-  color := PixelGetColor(1467, 438) ; Monitor if no records left
-  if (color = 0xF3F5F8) {
-    Run("https://rumble.com/c/c-6030257") ; Navigate back to the channel
-    Sleep(1000)
-    ShowMessageBox("Task completed", true)
-    Reload()
-  }
-  ShowMessageBox("Deleting next video...")
-  Click(1466, 436) ; Click Three dots menu
-  Sleep(1000)
-  Click(1400, 645) ; Click Delete option (645 coordinate is important, it fits various dropdown menus)
-  Sleep(1000)
-  Click(1210, 685) ; Click Confirm button
-  color := PixelGetColor(1010, 650) ; Monitor View Video green button (indicator that file uploaded)
-  while (color = 0xFFFFFF) {
-    ShowMessageBox("Deleting video...")
-    color := PixelGetColor(1010, 650)
-  }
-  DeleteRumbleVideos()
 }
 
 ; -------------------------------------------------------------------------------
@@ -179,7 +136,7 @@ CreateDemotivator() {
   Sleep(1000)
   Send("^a")
   Sleep(100)
-  A_Clipboard := "WHAT DO YOU IMAGINE WHEN YOU HEAR THE WORD `"TERRORIST`"?"
+  A_Clipboard := "ENTER YOUR TEXT HERE?"
   Send("^{v}")
   Sleep(100)
   Send("{Tab}")
@@ -189,6 +146,29 @@ CreateDemotivator() {
   ShowMessageBox("Task completed", true)
 }
 
+; -------------------------------------------------------------------------------
+; DeleteRumbleVideos
+; -------------------------------------------------------------------------------
+#HotIf WinActive('ahk_exe Chrome.exe')
+^!d:: DeleteRumbleVideos()
+#HotIf
+DeleteRumbleVideos() {
+  color := PixelGetColor(1467, 438) ; Monitor if no records left
+  if (color = 0xF3F5F8) {
+    Run("https://rumble.com/c/c-6030257") ; Navigate back to the channel
+    Sleep(1000)
+    ShowMessageBox("Task completed", true)
+    Reload()
+  }
+  ShowMessageBox("Deleting next video...")
+  Click(1866, 504) ; Click Three dots menu
+  Sleep(1000)
+  Click(1815, 711) ; Click Delete option (711 coordinate is important, borderline between 5 and 6 menu items)
+  Sleep(1000)
+  Click(1210, 685) ; Click Confirm button
+  Sleep(13000)
+  DeleteRumbleVideos()
+}
 
 ; -------------------------------------------------------------------------------
 ; DeleteAuthorizedApps
