@@ -46,6 +46,7 @@ MyGui.Value := 0
 ; -------------------------------------------------------------------------------
 #HotIf WinActive('ahk_exe Chrome.exe') and InStr(WinGetTitle('A'), 'on X')
 #Ins:: PostTwitterImages()
+#^Ins:: PostTwitterVideos()
 #HotIf
 
 PostTwitterImages() {
@@ -54,10 +55,6 @@ PostTwitterImages() {
     Sleep(100)
   folderName := MyListBox.Text
   folderPath := "d:\Pictures\Web\" folderName
-
-  if (folderName = "Islam")
-    PostTwitterVideos()
-
   totalImages := 0
   loop files folderPath "\*.png" ; Count total number of images
     totalImages += 1
@@ -72,29 +69,55 @@ PostTwitterImages() {
     Send("^{Enter}")
     Sleep(2000)
   }
-  ShowMessageBox("Task completed. Posted " totalImages " images.", true)
+  ShowMessageBox("Task completed", true)
   Reload()
 }
 
 PostTwitterVideos() {
+  images := [
+    "d:\Pictures\Web\Islam\Palestine\001.png", ; Does Palestine meets the definition of state?
+    "d:\Pictures\Web\Islam\Palestine\002.png", ; The word "Palestine" comes from Greeks
+    "d:\Pictures\Web\Islam\Palestine\003.png"  ; Palestinians are not Arabs
+  ]
   videos := [
+    ; "Deepshit Muhammad, you, Palestinians, have kidnapped, murdered, burned, raped, beheaded, maimed, and are still holding Jews hostage. You are radical Jew-hating Islamists who must be wiped off the face of the earth. You bring blood, death and terror wherever you go.",
+    ; "Deepshit Muhammad, those who call themselves Palestinians are not even Arabs. They are scattered gypsies, fugitives from other countries who have escaped the prosecution for their crimes. That's why not a single Arab country wants to take in these `"Muslim brothers`".",
+    ; "Deepshit Muhammad, there is no such thing as allah, you uneducated deepshit. 21st century, space exploration, artificial intelligence, computers, robots, spacecrafts, bio-chemistry... and you, medieval savages still believe in allahs & shaitans.",
+    ; "Deepshit Muhammad, do you know many Arab countries attacked Israel in the 6-day war, unprovoked? Egypt, Syria, Jordan, Iraq, Saudi Arabia, Lebanon, Algeria, Kuwait, Sudan, Libya, Morocco, Tunisia, Yemen. Israel alone wiped them all out in 6 days like shit off the floor.",
+
     "https://www.youtube.com/watch?v=qAm00onkJCo", ; Soviet Russia, The Creator of the PLO and the "Palestinian People"
+    "https://www.youtube.com/watch?v=AkHla6NgAM4", ; Palestinian terrorists make fake videos to inove pity
     "https://www.youtube.com/watch?v=KubPCfmEXyw", ; Message to the Palestinians from Saudi Writer
-    "https://x.com/dpenetration24/status/1792984254617378968", ; The representatives of True Islam
-    "https://x.com/dpenetration24/status/1792984019455414498", ; I hate you and I will kill you for the sake of Allah
+    "https://www.youtube.com/watch?v=NPRIhiFo1Ho", ; Genocide of Who?
+    
     "https://x.com/dpenetration24/status/1792983679775523314", ; October 7th Footage (Part 1)
     "https://x.com/dpenetration24/status/1792983830179074408", ; October 7th Footage (Part 2)
+    "https://x.com/dpenetration24/status/1792984254617378968", ; The representatives of True Islam
+    "https://x.com/dpenetration24/status/1792984019455414498", ; I hate you and I will kill you for the sake of Allah
+    "https://x.com/dpenetration24/status/1792993354998788596", ; Palestinians teach children to hate and kill Jews
+    "https://x.com/dpenetration24/status/1792993670817325253", ; Mr. Pallywood (Saleh Aljafarawi)
   ]
-  ShowMessageBox("Found " videos.Length " messages")
-  loop videos.Length { ; Loop through all messages in the array
-    ShowMessageBox("Posting message " A_Index " of " videos.Length)
+  ShowMessageBox("Found " images.Length " images and " videos.Length " videos")
+  loop images.Length { ; Loop through all images in the array
+    ShowMessageBox("Posting image " A_Index " of " images.Length)
+    wc := WinClip()
+    wc.Clear()
+    wc.SetBitmap(images[A_Index])
+    wc.Paste()
+    Sleep(1000)
+    Send("^{Enter}")
+    Sleep(2000)
+  }
+  loop videos.Length { ; Loop through all videos in the array
+    ShowMessageBox("Posting video " A_Index " of " videos.Length)
     A_Clipboard := videos[A_Index]
     Send("^{v}")
     Sleep(1000)
     Send("^{Enter}")
     Sleep(2000)
   }
-  ShowMessageBox("Task completed. Posted " videos.Length " videos.", true)
+  ShowMessageBox("Task completed", true)
+  Reload()
 }
 
 ; -------------------------------------------------------------------------------
