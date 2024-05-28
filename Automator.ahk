@@ -7,17 +7,14 @@
 ; Kills AutoHotkey process
 ; -------------------------------------------------------------------------------
 #HotIf ProcessExist("AutoHotkey64.exe")
-#Esc:: Reload()
+Pause:: Reload()
 #HotIf
 
-::dd:: Double Penetration
-
-; -------------------------------------------------------------------------------
-; YouTube copyright disclaimer
-; -------------------------------------------------------------------------------
-#HotIf WinActive('ahk_exe Chrome.exe') and InStr(WinGetTitle('A'), 'Video details - YouTube Studio')
-#Ins:: Send("All the videos, songs, images, and graphics used in the video belong to their respective owners and I or this channel does not claim any right over them. Copyright Disclaimer under section 107 of the Copyright Act of 1976, allowance is made for �fair use� for purposes such as criticism, comment, news reporting, teaching, scholarship, education and research. Fair use is a use permitted by copyright statute that might otherwise be infringing.")
-#HotIf
+::dd::Double Penetration
+::ddd::dpenetration24@gmail.com
+::ss::Slava Lishnevsky
+::sss::slishnevsky@gmail.com
+::ppp::gorLubUlKir1440
 
 ; -------------------------------------------------------------------------------
 ; ShowMessageBox
@@ -79,38 +76,18 @@ PostTwitterImages() {
 }
 
 PostTwitterVideos() {
-  images := [
-    "d:\Pictures\Web\Islam\Palestine\001.png", ; Does Palestine meets the definition of state?
-    "d:\Pictures\Web\Islam\Palestine\002.png", ; The word "Palestine" comes from Greeks
-    "d:\Pictures\Web\Islam\Palestine\003.png"  ; Palestinians are not Arabs
-  ]
   videos := [
-    ; "Deepshit Muhammad, you, Palestinians, have kidnapped, murdered, burned, raped, beheaded, maimed, and are still holding Jews hostage. You are radical Jew-hating Islamists who must be wiped off the face of the earth. You bring blood, death and terror wherever you go.",
-    ; "Deepshit Muhammad, those who call themselves Palestinians are not even Arabs. They are scattered gypsies, fugitives from other countries who have escaped the prosecution for their crimes. That's why not a single Arab country wants to take in these `"Muslim brothers`".",
-    ; "Deepshit Muhammad, there is no such thing as allah, you uneducated deepshit. 21st century, space exploration, artificial intelligence, computers, robots, spacecrafts, bio-chemistry... and you, medieval savages still believe in allahs & shaitans.",
-    ; "Deepshit Muhammad, do you know many Arab countries attacked Israel in the 6-day war, unprovoked? Egypt, Syria, Jordan, Iraq, Saudi Arabia, Lebanon, Algeria, Kuwait, Sudan, Libya, Morocco, Tunisia, Yemen. Israel alone wiped them all out in 6 days like shit off the floor.",
-    "https://www.youtube.com/watch?v=qAm00onkJCo", ; Soviet Russia, The Creator of the PLO and the "Palestinian People"
-    "https://www.youtube.com/watch?v=AkHla6NgAM4", ; Palestinian terrorists make fake videos to inove pity
-    "https://www.youtube.com/watch?v=dAbEa-BehAg", ; Message to the Palestinians from Saudi writer Rawaf al-Saeen
-    "https://www.youtube.com/watch?v=NPRIhiFo1Ho", ; Genocide of Who?
-    "https://x.com/dpenetration24/status/1792983679775523314", ; October 7th Footage (Part 1)
-    "https://x.com/dpenetration24/status/1792983830179074408", ; October 7th Footage (Part 2)
-    "https://x.com/dpenetration24/status/1792984254617378968", ; The representatives of True Islam
-    "https://x.com/dpenetration24/status/1792984019455414498", ; I hate you and I will kill you for the sake of Allah
-    "https://x.com/dpenetration24/status/1792993354998788596", ; Palestinians teach children to hate and kill Jews
-    "https://x.com/dpenetration24/status/1792993670817325253", ; Mr. Pallywood (Saleh Aljafarawi)
+    "Soviet Russia, The Creator of the PLO and the `"Palestinian people`" https://rumble.com/v4xy8rz-soviet-russia-the-creator-of-the-plo-and-the-palestinian-people.html",
+    "How `"innocent`" Palestinians brutally raped, burned, beheaded, mutilated Jews https://rumble.com/v4xxph5-innocent-palestinians-brutally-raped-burned-beheaded-mutilated-jews-they-ev.html",
+    "Message from a Saudi writer Rawaf al-Saeen to the `"Palestinians`" https://rumble.com/v4xy7ke-message-from-a-saudi-writer-rawaf-al-saeen-to-the-palestinians.html",
+    "The representatives of True Islam https://rumble.com/v4xxaie-representatives-of-true-islam.html",
+    "I hate you and I will kill you for the sake of Allah https://rumble.com/v4xxx8q-i-hate-you-and-i-will-kill-you-for-the-sake-of-allah.html",
+    "Palestinians preparing `"victims`" for Western media https://rumble.com/v4xxfzx-palestinians-preparing-victims-for-western-media.html",
+    "Palestinians begging Muslim brothers for help https://rumble.com/v4xy1ae-palestinians-begging-muslim-brothers-for-help.html",
+    "Palestine History Museum opens in Israel https://rumble.com/v4xy9sn-palestine-history-museum-opens-in-israel.html",
+    "Genocide of Who? https://rumble.com/v4xy4l3-genocide-of-who.html",
+    "The Brutal Reality of the Middle East https://www.youtube.com/watch?v=I5VPFw0vI6U"
   ]
-  ShowMessageBox("Found " images.Length " images and " videos.Length " videos")
-  loop images.Length { ; Loop through all images in the array
-    ShowMessageBox("Posting image " A_Index " of " images.Length)
-    wc := WinClip()
-    wc.Clear()
-    wc.SetBitmap(images[A_Index])
-    wc.Paste()
-    Sleep(1000)
-    Send("^{Enter}")
-    Sleep(2000)
-  }
   loop videos.Length { ; Loop through all videos in the array
     ShowMessageBox("Posting video " A_Index " of " videos.Length)
     A_Clipboard := videos[A_Index]
@@ -155,40 +132,15 @@ CreateDemotivator() {
   Sleep(1000)
   Send("^a")
   Sleep(100)
-  A_Clipboard := "ENTER YOUR TEXT HERE"
-  Send("^{v}")
-  Sleep(100)
-  Send("{Tab}")
-  Send("{Enter}")
-  Send("g") ; Repeat adding 10px black border
-  Send("{Enter}")
+  ; A_Clipboard := "ENTER YOUR TEXT HERE"
+  ; Send("^{v}")
+  ; Sleep(100)
+  ; Send("{Tab}")
+  ; Send("{Enter}")
+  ; Send("g") ; Repeat adding 10px black border
+  ; Send("{Enter}")
   ShowMessageBox("Task completed", true)
 }
-
-; -------------------------------------------------------------------------------
-; DeleteRumbleVideos
-; -------------------------------------------------------------------------------
-; #HotIf WinActive('ahk_exe Chrome.exe')
-; #Del:: DeleteRumbleVideos()
-; #HotIf
-
-; DeleteRumbleVideos() {
-;   color := PixelGetColor(1467, 438) ; Monitor if no records left
-;   if (color = 0xF3F5F8) {
-;     Run("https://rumble.com/c/c-6030257") ; Navigate back to the channel
-;     Sleep(1000)
-;     ShowMessageBox("Task completed", true)
-;     Reload()
-;   }
-;   ShowMessageBox("Deleting next video...")
-;   Click(1866, 504) ; Click Three dots menu
-;   Sleep(1000)
-;   Click(1815, 711) ; Click Delete option (711 coordinate is important, borderline between 5 and 6 menu items)
-;   Sleep(1000)
-;   Click(1210, 685) ; Click Confirm button
-;   Sleep(13000)
-;   DeleteRumbleVideos()
-; }
 
 ; -------------------------------------------------------------------------------
 ; DeleteAuthorizedApps
@@ -205,4 +157,100 @@ DeleteAuthorizedApps() {
   Click(1150, 840)
   Sleep(8000)
   DeleteAuthorizedApps()
+}
+
+; -------------------------------------------------------------------------------
+; UploadRumbleVideos
+; -------------------------------------------------------------------------------
+#HotIf WinActive('ahk_exe Chrome.exe') and InStr(WinGetTitle('A'), 'Rumble')
+#Ins:: UploadRumbleVideos()
+#HotIf
+UploadRumbleVideos() {
+  folderPath := "d:\Videos\Web" ; Upload videos from this folder
+  A_Clipboard := folderPath
+  totalVideos := 0 ; Count number of files in that folder
+  loop files folderPath "\*.mp4" ; Count total number of videos
+    totalVideos += 1
+  ShowMessageBox("Found " totalVideos " videos")
+  loop files folderPath "\*.mp4" { ; Loop through all videos in the folder
+    if (A_Index < 5)
+      continue
+    ShowMessageBox("Uploading `"" A_LoopFileName "`"")
+    ; Select Upload
+    Click(1757, 154)
+    Sleep(100)
+    Click(1757, 223)
+    Sleep(1000)
+    ; Upload video file
+    Click(517, 540)
+    Sleep(1000)
+    Send(A_LoopFileFullPath)
+    Sleep(100)
+    Send("{Enter}")
+    Sleep(1000)
+    ; Enter Video info
+    Send("{Tab}")
+    Sleep(100)
+    Send(StrReplace(A_LoopFileName, ".mp4", ""))
+    Sleep(100)
+    ; Select Category
+    Send("{Tab 2}")
+    Sleep(100)
+    Send("Vlogs")
+    Sleep(100)
+    ; Select channel
+    Send("{Tab 8}")
+    Sleep(100)
+    Send("{Down}")
+    Sleep(100)
+    ; Upload thumbnail file
+    Click(1455, 685)
+    Sleep(1000)
+    Send(StrReplace(A_LoopFileFullPath, ".mp4", ".png"))
+    Sleep(100)
+    Send("{Enter}")
+    Sleep(1000)
+    ; Scroll to the bottom
+    Send("{Tab 3}")
+    Sleep(100)
+    ; Click Upload button
+    Click(1480, 1015) 
+    Sleep(1000)
+    ; Click to check Agreement 1, Agreement 2 and Submit button
+    Click(1730, 985) 
+    Sleep(100)
+    Click(1730, 1055)
+    Sleep(100)
+    Click(1730, 1135)
+    Sleep(100)
+    ; Wait for View "File name" button to appear
+    while (PixelGetColor(285, 340) != 0x618035) {
+      ShowMessageBox("Uploading `"" A_LoopFileName "`"")
+      Sleep(1000)
+    }
+  }
+  ShowMessageBox("Task completed", true)
+  Run("https://rumble.com/user/krovinushka1")
+}
+
+; -------------------------------------------------------------------------------
+; DeleteRumbleVideos
+; -------------------------------------------------------------------------------
+#HotIf WinActive('ahk_exe Chrome.exe') and InStr(WinGetTitle('A'), 'All videos')
+#Del:: DeleteRumbleVideos()
+#HotIf
+DeleteRumbleVideos() {
+  ShowMessageBox("Deleting next video...")
+  Click(1865, 505) 
+  Sleep(1000)
+  Click(1865, 711)
+  Sleep(1000)
+  Click(1210, 700)
+  Sleep(1000)
+  ; Wait for "Deleting..." message to disappear
+  while (PixelGetColor(1040, 710) == 0xFFFFFF) {
+    ShowMessageBox("Deleting video...")
+    Sleep(1000)
+  }
+  DeleteRumbleVideos()
 }
