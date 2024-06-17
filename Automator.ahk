@@ -6,9 +6,9 @@
 #Include WinClip.ahk
 
 ; -------------------------------------------------------------------------------
-; General actions
+; General hotstrings
 ; -------------------------------------------------------------------------------
-{ ; General hotstrings
+{
   ::ss::Slava Lishnevsky
   ::sss::slishnevsky@gmail.com
   ::kk::Кровинушка
@@ -16,12 +16,13 @@
   ::ppp::gorLubUlKir1440
 }
 
+; -------------------------------------------------------------------------------
+; General actions
+; -------------------------------------------------------------------------------
 #HotIf ProcessExist("AutoHotkey64.exe") ; Kills AutoHotkey process
-Pause:: Reload()
+Escape:: Reload()
 #HotIf
-
 Pause:: DllCall("PowrProf\SetSuspendState", "Int", 0, "Int", 0, "Int", 0) ; Puts a PC into sleep mode
-
 ScrollLock:: { ; Switchess between displays
   static state := false
   Run(state ? "DisplaySwitch.exe /internal" : "DisplaySwitch.exe /external")
@@ -44,7 +45,7 @@ ShowMessageBox(message, completed := false) {
 ; -------------------------------------------------------------------------------
 ; Folder selection window
 ; -------------------------------------------------------------------------------
-#HotIf WinActive("ahk_id" folderWindow.Hwnd)
+#HotIf WinActive("ahk_id" folderWindow.Hwnd) ; Submit selection by pressing Enter
 Enter::
 NumpadEnter:: folderWindow.Value := folderWindow.Submit()
 #HotIf
