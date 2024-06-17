@@ -1,4 +1,6 @@
 #Requires AutoHotkey v2
+#Warn   ; Recommended for catching common errors.
+#SingleInstance force  ; Ensures only one instance of the script is running.
 #SingleInstance
 #Include WinClipAPI.ahk
 #Include WinClip.ahk
@@ -6,7 +8,17 @@
 ; -------------------------------------------------------------------------------
 ; General actions
 ; -------------------------------------------------------------------------------
-^Esc:: Reload() ; Kills AutoHotkey process
+{ ; General hotstrings
+  ::ss::Slava Lishnevsky
+  ::sss::slishnevsky@gmail.com
+  ::kk::Кровинушка
+  ::kkk::krovinushka1@gmail.com
+  ::ppp::gorLubUlKir1440
+}
+
+#HotIf ProcessExist("AutoHotkey64.exe") ; Kills AutoHotkey process
+Pause:: Reload()
+#HotIf
 
 Pause:: DllCall("PowrProf\SetSuspendState", "Int", 0, "Int", 0, "Int", 0) ; Puts a PC into sleep mode
 
@@ -16,39 +28,42 @@ ScrollLock:: { ; Switchess between displays
   state := !state
 }
 
-; Shortcuts
-::dd::Double Penetration
-::ddd::dpenetration24@gmail.com
-::ss::Slava Lishnevsky
-::sss::slishnevsky@gmail.com
-::ppp::gorLubUlKir1440
-
 ; -------------------------------------------------------------------------------
 ; ShowMessageBox
 ; -------------------------------------------------------------------------------
 ShowMessageBox(message, completed := false) {
-  MyGui := Gui("-Caption")
-  MyGui.BackColor := completed ? "C80000" : "0000C8"
-  MyGui.SetFont("s20 cWhite", "Bahnschrift")
-  MyGui.AddText("Center", message)
-  MyGui.Show()
+  messageBox := Gui("-Caption")
+  messageBox.BackColor := completed ? "C80000" : "0000C8"
+  messageBox.SetFont("s20 cWhite", "Bahnschrift")
+  messageBox.AddText("Center", message)
+  messageBox.Show()
   Sleep(completed ? 2000 : 1000)
-  MyGui.Hide()
+  messageBox.Hide()
 }
 
 ; -------------------------------------------------------------------------------
 ; Folder selection window
 ; -------------------------------------------------------------------------------
-#HotIf WinActive("ahk_id" MyGui.Hwnd)
+#HotIf WinActive("ahk_id" folderWindow.Hwnd)
 Enter::
-NumpadEnter:: MyGui.Value := MyGui.Submit()
+NumpadEnter:: folderWindow.Value := folderWindow.Submit()
 #HotIf
 
-MyGui := Gui("AlwaysOnTop", "Folder")
-MyGui.SetFont("s10", "Bahnschrift")
-MyGui.AddText(, "Select your folder")
-MyListBox := MyGui.AddListBox("r7 Choose1 w200", ["Betrayal", "America", "Canada", "Faggots", "Gaza", "Globalists", "Islam", "Niggers", "Religion"])
-MyGui.Value := 0
+folderWindow := Gui("AlwaysOnTop")
+folderWindow.SetFont("s10", "Bahnschrift")
+folderWindow.AddText(, "Select your folder")
+folderArray := []  ; Initialize an empty array to store folder names
+; Loop through items in the directory
+rootFolderPath := "d:\Pictures\Web"
+Loop Files rootFolderPath "\*", "D"
+{
+  currentItem := A_LoopFileFullPath
+  ; Get the folder name and add it to the array
+  folderName := SubStr(currentItem, InStr(currentItem, "\", , -1) + 1)  ; Extract folder name from full path
+  folderArray.push(folderName)  ; Add folder name to the array
+}
+MyListBox := folderWindow.AddListBox("r" folderArray.Length " Choose1 w200", folderArray)
+folderWindow.Value := 0
 
 ; -------------------------------------------------------------------------------
 ; PostTwitterImages & PostTwitterVideos
@@ -59,16 +74,15 @@ Ins:: PostTwitterImages()
 #HotIf
 
 PostTwitterImages() {
-  MyGui.Show() ; Folder selection
-  while (!MyGui.Value)
+  folderWindow.Show() ; Folder selection
+  while (!folderWindow.Value)
     Sleep(1000)
-  folderName := MyListBox.Text
-  folderPath := "d:\Pictures\Web\" folderName
+  folderPath := "d:\Pictures\Web\" MyListBox.Text
   totalImages := 0
-  loop files folderPath "\*.png" ; Count total number of images
+  Loop Files folderPath "\*.png" ; Count total number of images, "D"
     totalImages += 1
   ShowMessageBox("Found " totalImages " images")
-  loop files folderPath "\*.png" { ; Loop through all images in the folder
+  Loop Files folderPath "\*.png" { ; Loop through all images in the folder, "D"
     ShowMessageBox("Posting image " A_Index " of " totalImages)
     wc := WinClip()
     wc.Clear()
@@ -191,10 +205,10 @@ UploadRumbleVideos() {
   folderPath := "d:\Videos\Web\New2" ; Upload videos from this folder
   A_Clipboard := folderPath
   totalVideos := 0 ; Count number of files in that folder
-  loop files folderPath "\*.mp4" ; Count total number of videos
+  Loop Files folderPath "\*.mp4" ; Count total number of videos, "D"
     totalVideos += 1
   ShowMessageBox("Found " totalVideos " videos")
-  loop files folderPath "\*.mp4" { ; Loop through all videos in the folder
+  Loop Files folderPath "\*.mp4" { ; Loop through all videos in the folder, "D"
     ShowMessageBox("Uploading `"" A_LoopFileName "`"")
     ; Select Upload
     Click(1757, 154)
