@@ -1,9 +1,8 @@
 #Requires AutoHotkey v2
-#Warn   ; Recommended for catching common errors.
-#SingleInstance force  ; Ensures only one instance of the script is running.
-#SingleInstance
-#Include WinClipAPI.ahk
-#Include WinClip.ahk
+#Warn ; Recommended for catching common errors
+#SingleInstance force ; Ensures only one instance of the script is running
+#Include WinClipAPI.ahk ; WinClip external library
+#Include WinClip.ahk ; WinClip external library
 
 ; -------------------------------------------------------------------------------
 ; General hotstrings
@@ -19,8 +18,8 @@
 ; -------------------------------------------------------------------------------
 ; General actions
 ; -------------------------------------------------------------------------------
-#HotIf ProcessExist("AutoHotkey64.exe") ; Kills AutoHotkey process
-Escape:: Reload()
+#HotIf ProcessExist("AutoHotkey64.exe")
+Escape:: Reload() ; Reloads AutoHotkey process
 #HotIf
 Pause:: DllCall("PowrProf\SetSuspendState", "Int", 0, "Int", 0, "Int", 0) ; Puts a PC into sleep mode
 ScrollLock:: { ; Switchess between displays
