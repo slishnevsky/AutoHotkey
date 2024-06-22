@@ -8,6 +8,7 @@
 ; General hotstrings
 ; -------------------------------------------------------------------------------
 {
+  ::aa::AutoHotkey v2
   ::ss::Slava Lishnevsky
   ::sss::slishnevsky@gmail.com
   ::kk::Кровинушка
@@ -18,9 +19,7 @@
 ; -------------------------------------------------------------------------------
 ; General actions
 ; -------------------------------------------------------------------------------
-#HotIf ProcessExist("AutoHotkey64.exe")
-Escape:: Reload() ; Reloads AutoHotkey process
-#HotIf
+#Esc:: ExitApp ; Exits AutoHotkey app
 Pause:: DllCall("PowrProf\SetSuspendState", "Int", 0, "Int", 0, "Int", 0) ; Puts a PC into sleep mode
 ScrollLock:: { ; Switchess between displays
   static state := false
@@ -31,13 +30,13 @@ ScrollLock:: { ; Switchess between displays
 ; -------------------------------------------------------------------------------
 ; ShowMessageBox
 ; -------------------------------------------------------------------------------
-ShowMessageBox(message, completed := false) {
+ShowMessageBox(message) {
   messageBox := Gui("-Caption")
-  messageBox.BackColor := completed ? "C80000" : "0000C8"
+  messageBox.BackColor := "6391EE"
   messageBox.SetFont("s20 cWhite", "Bahnschrift")
   messageBox.AddText("Center", message)
   messageBox.Show()
-  Sleep(completed ? 2000 : 1000)
+  Sleep(1000)
   messageBox.Hide()
 }
 
@@ -52,11 +51,9 @@ NumpadEnter:: folderWindow.Value := folderWindow.Submit()
 folderWindow := Gui("AlwaysOnTop")
 folderWindow.SetFont("s10", "Bahnschrift")
 folderWindow.AddText(, "Select your folder")
-folderArray := []  ; Initialize an empty array to store folder names
-; Loop through items in the directory
-rootFolderPath := "d:\Pictures\Web"
-Loop Files rootFolderPath "\*", "D"
-{
+folderArray := [] ; Initialize an empty array to store folder names
+rootFolderPath := "d:\Pictures\Web\"
+loop files rootFolderPath "*", "D" { ; Loop through items in the directory
   currentItem := A_LoopFileFullPath
   ; Get the folder name and add it to the array
   folderName := SubStr(currentItem, InStr(currentItem, "\", , -1) + 1)  ; Extract folder name from full path
@@ -66,63 +63,122 @@ MyListBox := folderWindow.AddListBox("r" folderArray.Length " Choose1 w200", fol
 folderWindow.Value := 0
 
 ; -------------------------------------------------------------------------------
-; PostTwitterImages & PostTwitterVideos
+; InsertTweeterPosts
 ; -------------------------------------------------------------------------------
-#HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "on X")
-Ins:: PostTwitterImages()
-^Ins:: PostTwitterVideos()
+#HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "Home / X")
+Ins:: InsertTweeterVideos()
 #HotIf
 
-PostTwitterImages() {
+InsertTweeterVideos() {
+  folderPath := "d:\Videos\Web\Twitter\" ; Upload videos from this folder
+  totalVideos := 0 ; Count number of files in that folder
+  loop files folderPath "*.mp4" ; Count total number of videos
+    totalVideos += 1
+  ShowMessageBox("Found " totalVideos " videos")
+  firstTime := true
+  loop files folderPath "*.mp4" { ; Loop through all videos in the folder
+    ShowMessageBox("Uploading `"" A_LoopFileName "`"")
+    Send(StrReplace(A_LoopFileName, ".mp4", ""))
+    Send("{Tab 2}")
+    Sleep(1000)
+    Send("{Enter}")
+    Sleep(1000)
+    Send(A_LoopFileFullPath)
+    Sleep(1000)
+    Send("{Enter}")
+    Sleep(1000)
+    Exit
+  }
+  ShowMessageBox("Task completed")
+}
+
+; -------------------------------------------------------------------------------
+; DeleteTweeterPosts
+; -------------------------------------------------------------------------------
+#HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "Кровинушка (@krovinushka1) / X")
+Del:: DeleteTweeterPosts()
+#HotIf
+
+DeleteTweeterPosts() {
+  ; Wait for "Deleting..." message to disappear
+  if (PixelGetColor(1167, 663) == 0xFFFFFF) {
+    ShowMessageBox("Task completed")
+    return
+  }
+  ShowMessageBox("Deleting next post...")
+  Click(1167, 663)
+  Sleep(1000)
+  Click(1000, 673)
+  Sleep(1000)
+  Click(1000, 673)
+  Sleep(1000)
+  DeleteTweeterPosts()
+}
+
+; -------------------------------------------------------------------------------
+; ReplyTwitterImages
+; -------------------------------------------------------------------------------
+#HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "on X")
+Ins:: ReplyTwitterImages()
+#HotIf
+
+ReplyTwitterImages() {
   folderWindow.Show() ; Folder selection
   while (!folderWindow.Value)
     Sleep(1000)
-  folderPath := "d:\Pictures\Web\" MyListBox.Text
+  folderPath := "d:\Pictures\Web\" MyListBox.Text "\"
   totalImages := 0
-  Loop Files folderPath "\*.png" ; Count total number of images, "D"
+  loop files folderPath "*.png" ; Count total number of images
     totalImages += 1
   ShowMessageBox("Found " totalImages " images")
-  Loop Files folderPath "\*.png" { ; Loop through all images in the folder, "D"
+  loop files folderPath "*.png" { ; Loop through all images in the folder
     ShowMessageBox("Posting image " A_Index " of " totalImages)
     wc := WinClip()
     wc.Clear()
-    wc.SetBitmap(A_LoopFilePath)
+    wc.SetBitmap(A_LoopFileFullPath)
     wc.Paste()
     Sleep(1000)
     Send("^{Enter}")
     Sleep(2000)
   }
-  ShowMessageBox("Task completed", true)
+  ShowMessageBox("Task completed")
   Reload()
 }
 
-PostTwitterVideos() {
+; -------------------------------------------------------------------------------
+; ReplyTwitterVideos
+; -------------------------------------------------------------------------------
+#HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "on X")
+^Ins:: ReplyTwitterVideos()
+#HotIf
+
+ReplyTwitterVideos() {
   videos := [
-    "https://rumble.com/v4zryxn-soviet-russia-the-creator-of-the-plo-and-the-palestinian-people.html",
-    "https://rumble.com/v4zrrir-how-innocent-palestinians-brutally-raped-burned-beheaded-and-mutilated-isra.html",
-    "https://rumble.com/v4zrqru-palestinians-preparing-victims-for-western-media.html",
-    "https://rumble.com/v4zrprl-message-from-a-saudi-writer-to-the-palestinians.html",
-    "https://x.com/TheMossadIL/status/1734962161200275821", ; The leaders of HamISIS are moved by your donations. Moved to a bigger house.
-    "https://x.com/krovinushka1/status/1800497436999499886", ; True face of Islam and "Palestinian people"
-    "https://x.com/krovinushka1/status/1799458701595832441", ; I hate you and I will kill you for the sake of Allah
-    "https://x.com/krovinushka1/status/1802079239610450411", ; "Peaceful" Palestinians in Ramallah today chanting: “If you have a rifle and you only shoot it at weddings, then go kill a Jew or give the weapon to Hamas”
-    "https://x.com/krovinushka1/status/1799458537946730658", ; October 7 - 1
-    "https://x.com/krovinushka1/status/1799458654808387712", ; October 7 - 2
-    "https://x.com/krovinushka1/status/1800498901965021246", ; October 7 - 3
-    "https://x.com/krovinushka1/status/1800499049487102051", ; October 7 - 4
-    "https://x.com/krovinushka1/status/1800499196539380045", ; October 7 - 5
-    "https://x.com/krovinushka1/status/1800499315506643369", ; October 7 - 6
-    "https://x.com/krovinushka1/status/1799459044459151644", ; Palestinians celebrating 9-11
-    "https://x.com/krovinushka1/status/1799459321920765996", ; Uninvolved Gazan civilians (October 7th footage)
-    "https://x.com/krovinushka1/status/1799459056018772305", ; Palestinians teach children to hate and kill Jews
-    "https://x.com/krovinushka1/status/1799458325412856262", ; Canada under Trudeau's regime
-    "https://x.com/krovinushka1/status/1799458875395227727", ; Palestinian child, 50 pounds
-    "https://x.com/krovinushka1/status/1799459032799084924", ; Palestinians begging Muslim brothers for help
-    "https://x.com/krovinushka1/status/1799459931994915307", ; Музей Истории Палестины
-    "https://x.com/krovinushka1/status/1799460041176776954", ; Геноцид Кого?
-    "https://x.com/krovinushka1/status/1799803714431222179", ; Kurdish Islamist drinks hot camel urine because the “prophet” also drank it
-    "https://x.com/krovinushka1/status/1800186799345807671", ; Palestinian Gaza terrorist cockroach (funded by UN & UNRWA) crawled out of his hole and went straight to Allah!
-    "https://x.com/krovinushka1/status/1800494799642075605"  ; Supporter of Palestinian terrorists, they have been waiting for so long
+    "Video: Soviet Russia, The Creator of the PLO and the «Palestinian people» https://rumble.com/v4zryxn-soviet-russia-the-creator-of-the-plo-and-the-palestinian-people.html",
+    "Video: How «innocent» Palestinians brutally raped, burned, beheaded and mutilated Israelis https://rumble.com/v4zrrir-how-innocent-palestinians-brutally-raped-burned-beheaded-and-mutilated-isra.html",
+    "Video: Palestinians preparing «victims» for Western media https://rumble.com/v4zrqru-palestinians-preparing-victims-for-western-media.html",
+    "Video: Message from a Saudi Writer Rawaf al-Saeen to the Palestinians https://rumble.com/v4zrprl-message-from-a-saudi-writer-to-the-palestinians.html",
+    "Video: The children of Gaza are suffering. Donate us money! https://rumble.com/v52e8u0-the-children-of-gaza-are-suffering.-donate-us-money.html",
+    "https://x.com/krovinushka1/status/1802871814915244440", ; The Representatives of True Islam
+    "https://x.com/krovinushka1/status/1802872694825734299", ; True Face of Islam
+    "https://x.com/krovinushka1/status/1802870283365183725", ; «Innocent» Palestinians (October 7th footage) Part 1
+    "https://x.com/krovinushka1/status/1802870340080603354", ; «Innocent» Palestinians (October 7th footage) Part 2
+    "https://x.com/krovinushka1/status/1802870388696744396", ; «Innocent» Palestinians (October 7th footage) Part 3
+    "https://x.com/krovinushka1/status/1802870469005128165", ; «Innocent» Palestinians (October 7th footage) Part 4
+    "https://x.com/krovinushka1/status/1802870558213738502", ; «Innocent» Palestinians (October 7th footage) Part 5
+    "https://x.com/krovinushka1/status/1802870604892144014", ; «Innocent» Palestinians (October 7th footage) Part 6
+    "https://x.com/krovinushka1/status/1802870717454696851", ; «Peaceful» Palestinians in Ramallah chanting
+    "https://x.com/krovinushka1/status/1802870800648745365", ; «Uninvolved» Gazan civilians (October 7th footage)
+    "https://x.com/krovinushka1/status/1802871131809947857", ; Mister Pallywood (Saleh Aljafarawi)
+    "https://x.com/krovinushka1/status/1802871484156637485", ; Palestinians celebrating 9/11
+    "https://x.com/krovinushka1/status/1802871552062394796", ; Palestinians teach children to hate and kill Jews
+    "https://x.com/krovinushka1/status/1802873116701388822", ; Canada under Trudeau's regime
+    "https://x.com/krovinushka1/status/1802871269555105837", ; Palestinian child ma'am, 50 pounds of fresh Palestinian child
+    "https://x.com/krovinushka1/status/1802871182183588097", ; Palestine History Museum opens in Israel
+    "https://x.com/krovinushka1/status/1802871382209962288", ; Palestinians begging Muslim brothers for help
+    "https://x.com/krovinushka1/status/1802871014981870012", ; Genocide of Who?
+    "https://x.com/krovinushka1/status/1803223415383310554", ; Kurdish Islamist drinks hot camel urine because «prophet» drank it
+    "https://x.com/krovinushka1/status/1802872350922146265"  ; Hamas supporter they have been waiting for
   ]
   loop videos.Length { ; Loop through all videos in the array
     ShowMessageBox("Posting video " A_Index " of " videos.Length)
@@ -132,67 +188,8 @@ PostTwitterVideos() {
     Send("^{Enter}")
     Sleep(2000)
   }
-  ShowMessageBox("Task completed", true)
+  ShowMessageBox("Task completed")
   Reload()
-}
-
-; -------------------------------------------------------------------------------
-; CreateDemotivator
-; -------------------------------------------------------------------------------
-#HotIf WinActive("ahk_exe FSCapture.exe")
-Ins:: CreateDemotivator()
-#HotIf
-
-CreateDemotivator() {
-  Send("g") ; White 1px border
-  Sleep(1000)
-  Send("{Tab 4}")
-  Send("1")
-  Click(420, 60)
-  Sleep(1000)
-  Click(200, 140)
-  Click(40, 280)
-  Sleep(1000)
-  Send("{Enter}")
-  Send("g") ; Back 10px border
-  Sleep(1000)
-  Send("{Tab 4}")
-  Send("10")
-  Click(420, 60)
-  Sleep(1000)
-  Click(20, 140)
-  Click(40, 280)
-  Sleep(1000)
-  Send("{Enter}")
-  Send("t") ; Enter text
-  Sleep(1000)
-  Send("^a")
-  Sleep(1000)
-  ; A_Clipboard := "ENTER YOUR TEXT HERE"
-  ; Send("^{v}")
-  ; Sleep(1000)
-  ; Send("{Tab}")
-  ; Send("{Enter}")
-  ; Send("g") ; Repeat adding 10px black border
-  ; Send("{Enter}")
-  ShowMessageBox("Task completed", true)
-}
-
-; -------------------------------------------------------------------------------
-; DeleteAuthorizedApps
-; -------------------------------------------------------------------------------
-#HotIf WinActive("ahk_exe Chrome.exe") and (InStr(WinGetTitle("A"), "Third-party apps & services") or InStr(WinGetTitle("A"), "Сторонние приложения и сервисы"))
-Del:: DeleteAuthorizedApps()
-#HotIf
-DeleteAuthorizedApps() {
-  Click(780, 610)
-  Sleep(1000)
-  Click(1150, 820)
-  Sleep(1000)
-  Click(1150, 800)
-  Click(1150, 840)
-  Sleep(8000)
-  DeleteAuthorizedApps()
 }
 
 ; -------------------------------------------------------------------------------
@@ -201,16 +198,16 @@ DeleteAuthorizedApps() {
 #HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "Rumble")
 Ins:: UploadRumbleVideos()
 #HotIf
+
 UploadRumbleVideos() {
-  folderPath := "d:\Videos\Web\New2" ; Upload videos from this folder
-  A_Clipboard := folderPath
+  folderPath := "d:\Videos\Web\Rumble\Russian\" ; Upload videos from this folder
   totalVideos := 0 ; Count number of files in that folder
-  Loop Files folderPath "\*.mp4" ; Count total number of videos, "D"
+  loop files folderPath "*.mp4" ; Count total number of videos
     totalVideos += 1
   ShowMessageBox("Found " totalVideos " videos")
-  Loop Files folderPath "\*.mp4" { ; Loop through all videos in the folder, "D"
+  loop files folderPath "*.mp4" { ; Loop through all videos in the folder
     ShowMessageBox("Uploading `"" A_LoopFileName "`"")
-    ; Select Upload
+    ; Select Upload option
     Click(1757, 154)
     Sleep(1000)
     Click(1757, 223)
@@ -222,7 +219,7 @@ UploadRumbleVideos() {
     Sleep(1000)
     Send("{Enter}")
     Sleep(1000)
-    ; Enter Video info
+    ; Enter video title
     Send("{Tab}")
     Sleep(1000)
     Send(StrReplace(A_LoopFileName, ".mp4", ""))
@@ -252,7 +249,7 @@ UploadRumbleVideos() {
     ; Click Upload button
     Click(1480, 1015)
     Sleep(1000)
-    ; Click to check Agreement 1, Agreement 2 and Submit button
+    ; Check the agreements and click Submit button
     Click(1730, 985)
     Sleep(1000)
     Click(1730, 790)
@@ -261,22 +258,21 @@ UploadRumbleVideos() {
     Sleep(1000)
     Click(1730, 935)
     Sleep(1000)
-    ; Wait for View "File name" button to appear
-    while (PixelGetColor(285, 340) != 0x618035) {
+    while (PixelGetColor(285, 340) != 0x618035) { ; Wait for View "File name" button to appear
       ShowMessageBox("Uploading `"" A_LoopFileName "`"")
       Sleep(1000)
     }
   }
-  ShowMessageBox("Task completed", true)
-  Run("https://rumble.com/c/c-6332874")
+  ShowMessageBox("Task completed")
 }
 
 ; -------------------------------------------------------------------------------
 ; DeleteRumbleVideos
 ; -------------------------------------------------------------------------------
 #HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "All videos")
-Del:: DeleteRumbleVideos()
+; Del:: DeleteRumbleVideos()
 #HotIf
+
 DeleteRumbleVideos() {
   ShowMessageBox("Deleting next video...")
   Click(1869, 505) ; 1869 - borderline
@@ -285,10 +281,62 @@ DeleteRumbleVideos() {
   Sleep(1000)
   Click(1210, 700)
   Sleep(1000)
-  ; Wait for "Deleting..." message to disappear
-  while (PixelGetColor(1040, 710) == 0xFFFFFF) {
+  while (PixelGetColor(1040, 710) == 0xFFFFFF) { ; Wait for "Deleting..." message to disappear
     ShowMessageBox("Deleting video...")
     Sleep(1000)
   }
   DeleteRumbleVideos()
+}
+
+; -------------------------------------------------------------------------------
+; CreateDemotivator
+; -------------------------------------------------------------------------------
+#HotIf WinActive("ahk_exe FSCapture.exe")
+Ins:: CreateDemotivator()
+#HotIf
+
+CreateDemotivator() {
+  Send("g") ; White 1px border
+  Sleep(500)
+  Send("{Tab 4}")
+  Send("1")
+  Click(420, 60)
+  Sleep(500)
+  Click(200, 140)
+  Click(40, 280)
+  Sleep(500)
+  Send("{Enter}")
+  Send("g") ; Back 10px border
+  Sleep(500)
+  Send("{Tab 4}")
+  Send("10")
+  Click(420, 60)
+  Sleep(500)
+  Click(20, 140)
+  Click(40, 280)
+  Sleep(500)
+  Send("{Enter}")
+  Send("t") ; Enter text
+  Sleep(500)
+  Send("^a")
+  Sleep(500)
+  ShowMessageBox("Task completed")
+}
+
+; -------------------------------------------------------------------------------
+; DeleteAuthorizedApps
+; -------------------------------------------------------------------------------
+#HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "Third-party apps & services")
+Del:: DeleteAuthorizedApps()
+#HotIf
+
+DeleteAuthorizedApps() {
+  Click(780, 610)
+  Sleep(1000)
+  Click(1150, 820)
+  Sleep(1000)
+  Click(1150, 800)
+  Click(1150, 840)
+  Sleep(8000)
+  DeleteAuthorizedApps()
 }
