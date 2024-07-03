@@ -155,30 +155,25 @@ ReplyTwitterImages() {
 ReplyTwitterVideos() {
   videos := [
     "Video: Soviet Russia, The Creator of the PLO and the «Palestinian people» https://rumble.com/v4zryxn-soviet-russia-the-creator-of-the-plo-and-the-palestinian-people.html",
-    "Video: How «innocent» Palestinians brutally raped, burned, beheaded and mutilated Israelis https://rumble.com/v4zrrir-how-innocent-palestinians-brutally-raped-burned-beheaded-and-mutilated-isra.html",
-    "Video: Palestinians preparing «victims» for Western media https://rumble.com/v4zrqru-palestinians-preparing-victims-for-western-media.html",
+    "Video: How innocent Palestinians brutally raped, burned, beheaded and mutilated Israelis https://rumble.com/v4zrrir-how-innocent-palestinians-brutally-raped-burned-beheaded-and-mutilated-isra.html",
+    "Video: Palestinians preparing victims for Western media https://rumble.com/v4zrqru-palestinians-preparing-victims-for-western-media.html",
     "Video: Message from a Saudi Writer Rawaf al-Saeen to the Palestinians https://rumble.com/v4zrprl-message-from-a-saudi-writer-to-the-palestinians.html",
     "Video: The children of Gaza are suffering. Donate us money! https://rumble.com/v52e8u0-the-children-of-gaza-are-suffering.-donate-us-money.html",
-    "https://x.com/krovinushka1/status/1802871814915244440", ; The Representatives of True Islam
-    "https://x.com/krovinushka1/status/1802872694825734299", ; True Face of Islam
-    "https://x.com/krovinushka1/status/1802870283365183725", ; «Innocent» Palestinians (October 7th footage) Part 1
-    "https://x.com/krovinushka1/status/1802870340080603354", ; «Innocent» Palestinians (October 7th footage) Part 2
-    "https://x.com/krovinushka1/status/1802870388696744396", ; «Innocent» Palestinians (October 7th footage) Part 3
-    "https://x.com/krovinushka1/status/1802870469005128165", ; «Innocent» Palestinians (October 7th footage) Part 4
-    "https://x.com/krovinushka1/status/1802870558213738502", ; «Innocent» Palestinians (October 7th footage) Part 5
-    "https://x.com/krovinushka1/status/1802870604892144014", ; «Innocent» Palestinians (October 7th footage) Part 6
-    "https://x.com/krovinushka1/status/1802870717454696851", ; «Peaceful» Palestinians in Ramallah chanting
-    "https://x.com/krovinushka1/status/1802870800648745365", ; «Uninvolved» Gazan civilians (October 7th footage)
-    "https://x.com/krovinushka1/status/1802871131809947857", ; Mister Pallywood (Saleh Aljafarawi)
-    "https://x.com/krovinushka1/status/1802871484156637485", ; Palestinians celebrating 9/11
-    "https://x.com/krovinushka1/status/1802871552062394796", ; Palestinians teach children to hate and kill Jews
-    "https://x.com/krovinushka1/status/1802873116701388822", ; Canada under Trudeau's regime
-    "https://x.com/krovinushka1/status/1802871269555105837", ; Palestinian child ma'am, 50 pounds of fresh Palestinian child
-    "https://x.com/krovinushka1/status/1802871182183588097", ; Palestine History Museum opens in Israel
-    "https://x.com/krovinushka1/status/1802871382209962288", ; Palestinians begging Muslim brothers for help
-    "https://x.com/krovinushka1/status/1802871014981870012", ; Genocide of Who?
-    "https://x.com/krovinushka1/status/1803223415383310554", ; Kurdish Islamist drinks hot camel urine because «prophet» drank it
-    "https://x.com/krovinushka1/status/1802872350922146265"  ; Hamas supporter they have been waiting for
+    "https://x.com/dpenetration24/status/1808585686150222193", ; The Representatives of True Islam
+    "https://x.com/dpenetration24/status/1808592557116379611", ; True Face of Islam
+    "https://x.com/dpenetration24/status/1808593204859842951", ; Kurdish Islamist drinks hot camel urine because «prophet» drank it
+    "https://x.com/dpenetration24/status/1808593846344769997", ; Lie about famine in Gaza
+    "https://x.com/dpenetration24/status/1808594524387578308", ; Palestinian terrorists leaders rejoice in the massacre of Israelis
+    "https://x.com/dpenetration24/status/1808594628280791452", ; Innocent Palestinians 1 (October 7th footage)
+    "https://x.com/dpenetration24/status/1808594711260901588", ; Innocent Palestinians 2 (October 7th footage)
+    "https://x.com/dpenetration24/status/1808594820849676333", ; Innocent Palestinians 3 (October 7th footage)
+    "https://x.com/dpenetration24/status/1808595284147991011", ; Hamas terrorist Fathi Al-Sharif is a Head of the Teachers Union at the UN
+    "https://x.com/dpenetration24/status/1808595462322114620", ; Mister Pallywood Saleh Aljafarawi
+    "https://x.com/dpenetration24/status/1808595748172485007", ; Palestinians celebrating 9/11
+    "https://x.com/dpenetration24/status/1808595968956260408", ; Palestinians in Ramallah chanting If you have a rifle and you only shoot it at weddings, then go kill a Jew or give the weapon to Hamas
+    "https://x.com/dpenetration24/status/1808596191430459612", ; Palestinians teach children to hate and kill Jews
+    "https://x.com/dpenetration24/status/1808596317377003622", ; Uninvolved Gazan civilians (October 7th footage)
+    "https://x.com/dpenetration24/status/1808598194693054541"  ; Hamas supporter they have been waiting for
   ]
   loop videos.Length { ; Loop through all videos in the array
     ShowMessageBox("Posting video " A_Index " of " videos.Length)
@@ -304,7 +299,7 @@ CreateDemotivator() {
   Sleep(500)
   Click(200, 140)
   Click(40, 280)
-  Sleep(500)
+  ; Sleep(500)
   Send("{Enter}")
   Send("g") ; Back 10px border
   Sleep(500)
@@ -314,12 +309,18 @@ CreateDemotivator() {
   Sleep(500)
   Click(20, 140)
   Click(40, 280)
-  Sleep(500)
+  ; Sleep(500)
   Send("{Enter}")
   Send("t") ; Enter text
   Sleep(500)
   Send("^a")
   Sleep(500)
+  Send("TRUDEAU TURNED CANADA INTO A PEDOPHILE HAMAS CIRCUS")
+  ; Sleep(500)
+  Send("^{Enter}") ; Back 10px border
+  ; Sleep(500)
+  Send("g")
+  Send("{Enter}")
   ShowMessageBox("Task completed")
 }
 
