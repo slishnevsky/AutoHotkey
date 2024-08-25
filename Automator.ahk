@@ -8,7 +8,6 @@
 ; General hotstrings
 ; -------------------------------------------------------------------------------
 {
-  ::aa::AutoHotkey v2
   ::ss::Slava Lishnevsky
   ::sss::slishnevsky@gmail.com
   ::kk::Кровинушка
@@ -19,9 +18,9 @@
 ; -------------------------------------------------------------------------------
 ; General actions
 ; -------------------------------------------------------------------------------
-#Esc:: ExitApp ; Exits AutoHotkey app
+#Esc:: Reload ; Restart AutoHotkey app
 Pause:: DllCall("PowrProf\SetSuspendState", "Int", 0, "Int", 0, "Int", 0) ; Puts a PC into sleep mode
-ScrollLock:: { ; Switchess between displays
+ScrollLock:: { ; Switch between displays
   static state := false
   Run(state ? "DisplaySwitch.exe /internal" : "DisplaySwitch.exe /external")
   state := !state
@@ -95,25 +94,25 @@ InsertTweeterVideos() {
 ; -------------------------------------------------------------------------------
 ; DeleteTweeterPosts
 ; -------------------------------------------------------------------------------
-#HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "Кровинушка (@krovinushka1) / X")
-Del:: DeleteTweeterPosts()
-#HotIf
+; #HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "Кровинушка (@krovinushka1) / X")
+; Del:: DeleteTweeterPosts()
+; #HotIf
 
-DeleteTweeterPosts() {
-  ; Wait for "Deleting..." message to disappear
-  if (PixelGetColor(1167, 663) == 0xFFFFFF) {
-    ShowMessageBox("Task completed")
-    return
-  }
-  ShowMessageBox("Deleting next post...")
-  Click(1167, 663)
-  Sleep(1000)
-  Click(1000, 673)
-  Sleep(1000)
-  Click(1000, 673)
-  Sleep(1000)
-  DeleteTweeterPosts()
-}
+; DeleteTweeterPosts() {
+;   ; Wait for "Deleting..." message to disappear
+;   if (PixelGetColor(1167, 663) == 0xFFFFFF) {
+;     ShowMessageBox("Task completed")
+;     return
+;   }
+;   ShowMessageBox("Deleting next post...")
+;   Click(1167, 663)
+;   Sleep(1000)
+;   Click(1000, 673)
+;   Sleep(1000)
+;   Click(1000, 673)
+;   Sleep(1000)
+;   DeleteTweeterPosts()
+; }
 
 ; -------------------------------------------------------------------------------
 ; ReplyTwitterImages
@@ -154,26 +153,71 @@ ReplyTwitterImages() {
 
 ReplyTwitterVideos() {
   videos := [
-    "Video: Soviet Russia, The Creator of the PLO and the «Palestinian people» https://rumble.com/v4zryxn-soviet-russia-the-creator-of-the-plo-and-the-palestinian-people.html",
-    "Video: How innocent Palestinians brutally raped, burned, beheaded and mutilated Israelis https://rumble.com/v4zrrir-how-innocent-palestinians-brutally-raped-burned-beheaded-and-mutilated-isra.html",
-    "Video: Palestinians preparing victims for Western media https://rumble.com/v4zrqru-palestinians-preparing-victims-for-western-media.html",
-    "Video: Message from a Saudi Writer Rawaf al-Saeen to the Palestinians https://rumble.com/v4zrprl-message-from-a-saudi-writer-to-the-palestinians.html",
-    "Video: The children of Gaza are suffering. Donate us money! https://rumble.com/v52e8u0-the-children-of-gaza-are-suffering.-donate-us-money.html",
-    "https://x.com/dpenetration24/status/1808585686150222193", ; The Representatives of True Islam
-    "https://x.com/dpenetration24/status/1808592557116379611", ; True Face of Islam
-    "https://x.com/dpenetration24/status/1808593204859842951", ; Kurdish Islamist drinks hot camel urine because «prophet» drank it
-    "https://x.com/dpenetration24/status/1808593846344769997", ; Lie about famine in Gaza
-    "https://x.com/dpenetration24/status/1808594524387578308", ; Palestinian terrorists leaders rejoice in the massacre of Israelis
-    "https://x.com/dpenetration24/status/1808594628280791452", ; Innocent Palestinians 1 (October 7th footage)
-    "https://x.com/dpenetration24/status/1808594711260901588", ; Innocent Palestinians 2 (October 7th footage)
-    "https://x.com/dpenetration24/status/1808594820849676333", ; Innocent Palestinians 3 (October 7th footage)
-    "https://x.com/dpenetration24/status/1808595284147991011", ; Hamas terrorist Fathi Al-Sharif is a Head of the Teachers Union at the UN
-    "https://x.com/dpenetration24/status/1808595462322114620", ; Mister Pallywood Saleh Aljafarawi
-    "https://x.com/dpenetration24/status/1808595748172485007", ; Palestinians celebrating 9/11
-    "https://x.com/dpenetration24/status/1808595968956260408", ; Palestinians in Ramallah chanting If you have a rifle and you only shoot it at weddings, then go kill a Jew or give the weapon to Hamas
-    "https://x.com/dpenetration24/status/1808596191430459612", ; Palestinians teach children to hate and kill Jews
-    "https://x.com/dpenetration24/status/1808596317377003622", ; Uninvolved Gazan civilians (October 7th footage)
-    "https://x.com/dpenetration24/status/1808598194693054541"  ; Hamas supporter they have been waiting for
+    "Soviet Russia, The Creator of the PLO and the Palestinian people https://rumble.com/v4zryxn-soviet-russia-the-creator-of-the-plo-and-the-palestinian-people.html", 
+    "How innocent Palestinians brutally raped, burned, beheaded and mutilated Israelis https://rumble.com/v4zrrir-how-innocent-palestinians-brutally-raped-burned-beheaded-and-mutilated-isra.html", 
+    "Palestinians preparing victims for Western media https://rumble.com/v4zrqru-palestinians-preparing-victims-for-western-media.html", 
+    "Послание Саудовского писателя Равафа аль-Саина Палестинцам https://rumble.com/v4zrq6t-301944917.html", 
+    "Message from a Saudi Writer Rawaf al-Saeen to the Palestinians https://rumble.com/v4zrprl-message-from-a-saudi-writer-to-the-palestinians.html", 
+    "Canada under Trudeau's regime https://rumble.com/v4zrv06-canada-under-trudeaus-regime.html", 
+    "Canadian reporter woman is brutally attacked by Hamas Antifa mob in front of the Police https://rumble.com/v54x4yo-canadian-reporter-woman-is-brutally-attacked-by-hamas-antifa-mob-in-front-o.html", 
+    "Brainwashed Canadian muzzle slaves https://rumble.com/v4zryhr-brainwashed-canadian-muzzle-slaves.html", 
+    "Андрей Илларионов - Битва за Цивилизацию https://rumble.com/v5amnnh-320184125.html?e9s=src_v1_ucp", 
+    "Andrey Illarionov - A Battle for Civilization https://rumble.com/v5amnpv-andrey-illarionov-a-battle-for-civilization.html", 
+    "Андрей Илларионов - Андрей Илларионов на Радио Свобода https://rumble.com/v5amo31-320184685.html?e9s=src_v1_ucp", 
+    "Andrey Illarionov - Andrey Illarionov on Radio Liberty https://rumble.com/v5amo39-andrey-illarionov-andrey-illarionov-on-radio-liberty.html", 
+    "Western Civilization is in MORTAL DANGER https://rumble.com/v5cbjec-western-civilization-is-in-mortal-danger.html", 
+    "World's Deadliest Female Sniper - Lyudmila Pavlichenko https://rumble.com/v5aqhro-worlds-deadliest-female-sniper-lyudmila-pavlichenko.html", 
+    "Британцы были предупреждены 18 лет назад https://rumble.com/v5assd9--18-.html", 
+    "The Brits have been warned 18 years ago https://rumble.com/v5asu3e-the-brits-have-been-warned-18-years-ago.html", 
+    "Томми Робинсон - Обращение Томми Робинсона https://rumble.com/v5aji85-320037125.html", 
+    "Tommy Robinson - Message from Tommy Robinson https://rumble.com/v5ajiad-islamofascist-uk-government-persecutes-native-english-people.html", 
+    "Томми Робинсон - ВЕЛИКОБРИТАНИЯ АТАКОВАНА https://rumble.com/v59xltn-319015355.html", 
+    "Tommy Robinson - GREAT BRITAIN is UNDER ATTACK https://rumble.com/v59xb8b-tommy-robinson-speaks-out-amidst-uk-unrest.html", 
+    "Biden at White House pedophile concert https://rumble.com/v5ab0z1-biden-at-white-house-pedophile-concert.html", 
+    "Biden the Enemy of The United States https://rumble.com/v52ylfy-joe-biden-enemy-of-the-united-states.html", 
+    "Biden's speech for the Black students at the Black college https://rumble.com/v54e2z3-bidens-speech-for-the-black-students-at-the-black-college.html", 
+    "Biden spewing hatred and insults towards Republicans and Trump https://rumble.com/v576bc5-biden-spewing-hatred-and-insults-towards-republicans-and-trump.html", 
+    "The Racist History of Joe Biden https://rumble.com/v561sbe-the-racist-history-of-joe-biden.html", 
+    "The children of Gaza are suffering. Donate us money! https://rumble.com/v52e8u0-the-children-of-gaza-are-suffering.-donate-us-money.html", 
+
+    "https://x.com/krovinushka1/status/1827723774889718082", ; Representatives of True Islam
+    "https://x.com/krovinushka1/status/1827723925947547881", ; True face of Islam
+    "https://x.com/krovinushka1/status/1827724409504780548", ; Kurdish Islamist drinks hot camel urine because his prophet drank it
+    "https://x.com/krovinushka1/status/1827737411045982239", ; Palestinians celebrating 911 terrorist attack on the United States
+    "https://x.com/krovinushka1/status/1827737844028170725", ; Palestinians chanting If you have a rifle and you only shoot it at weddings, then go kill a Jew or give the weapon to Hamas
+    "https://x.com/krovinushka1/status/1827738014853804298", ; Palestinians teach children to hate and kill Jews
+    "https://x.com/krovinushka1/status/1827724341410455986", ; Shameless lie about famine in Gaza
+    "https://x.com/krovinushka1/status/1827725231995212287", ; Innocent Palestinians 1 (October 7th footage)
+    "https://x.com/krovinushka1/status/1827725421464674754", ; Innocent Palestinians 2 (October 7th footage)
+    "https://x.com/krovinushka1/status/1827725554881376342", ; Innocent Palestinians 3 (October 7th footage)
+    "https://x.com/krovinushka1/status/1827738396598362430", ; Uninvolved Gazan civilians (October 7th footage)
+    "https://x.com/krovinushka1/status/1827739261140947408", ; Genocide of Who?
+    "https://x.com/krovinushka1/status/1827739586568548661", ; Геноцид Кого?
+    "https://x.com/krovinushka1/status/1827740692182876209", ; America under Biden's regime
+    "https://x.com/krovinushka1/status/1827741050355515620", ; Canada under Trudeau's regime
+    "https://x.com/krovinushka1/status/1827743898082427128", ; Canadian Police serving hot lunch to Palestinian terrorists
+
+    "https://x.com/krovinushka1/status/1827739787832222117", ; Mister Pallywood Saleh Aljafarawi
+    "https://x.com/krovinushka1/status/1827739988714217773", ; Palestinians begging Muslim brothers for help
+    "https://x.com/krovinushka1/status/1827740112186216694", ; Palestine History Museum opens in Israel
+    "https://x.com/krovinushka1/status/1827740332508725581", ; В Израиле открылся Музей истории Палестины
+    "https://x.com/krovinushka1/status/1827740471667425700", ; Hamas supporter they have been waiting for
+    "https://x.com/krovinushka1/status/1827738657916104755", ; 50 pounds of fresh Palestinian child
+    "https://x.com/krovinushka1/status/1827738842843017686", ; 50 фунтов Палестинского младенца
+    "https://x.com/krovinushka1/status/1827744243990802435", ; Heroic Hamas finally burned down Israeli tank
+
+    "https://x.com/krovinushka1/status/1827741470264086806", ; Diversity, Kamala's electorate 1
+    "https://x.com/krovinushka1/status/1827741827379716159", ; Diversity, Kamala's electorate 2
+    "https://x.com/krovinushka1/status/1827742068799844521", ; Diversity, Kamala's electorate 3
+    "https://x.com/krovinushka1/status/1827742376246354143", ; Diversity, Kamala's electorate 4
+    "https://x.com/krovinushka1/status/1827742635383046288", ; Diversity, Kamala's electorate 5
+    "https://x.com/krovinushka1/status/1827742693532811705", ; Diversity, Kamala's electorate 6
+    "https://x.com/krovinushka1/status/1827745074710532366", ; Diversity, Kamala's electorate 7
+
+    "https://x.com/krovinushka1/status/1827742994969100594", ; Trudeau's Pedophile Parade, Toronto 1
+    "https://x.com/krovinushka1/status/1827743289421807989", ; Trudeau's Pedophile Parade, Toronto 2
+    "https://x.com/krovinushka1/status/1827743352105615748", ; Trudeau's Pedophile Parade, Toronto 3
+
   ]
   loop videos.Length { ; Loop through all videos in the array
     ShowMessageBox("Posting video " A_Index " of " videos.Length)
@@ -313,9 +357,9 @@ CreateDemotivator() {
   Send("{Enter}")
   Send("t") ; Enter text
   Sleep(500)
-  Send("^a")
-  Sleep(500)
-  Send("TRUDEAU TURNED CANADA INTO A PEDOPHILE HAMAS CIRCUS")
+  ; Send("^a")
+  ; Sleep(500)
+  ; Send(A_Clipboard)
   ; Sleep(500)
   Send("^{Enter}") ; Back 10px border
   ; Sleep(500)
