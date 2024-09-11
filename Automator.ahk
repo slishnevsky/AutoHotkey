@@ -118,15 +118,27 @@ UploadTweeterVideos() {
 ; -------------------------------------------------------------------------------
 ; ReplyTwitterImages
 ; -------------------------------------------------------------------------------
+; #HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "on X")
+; Ins:: ReplyTwitterImages()
+; #HotIf
+
 #HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "on X")
-Ins:: ReplyTwitterImages()
++!a:: ReplyTwitterImages("America")
++!c:: ReplyTwitterImages("Canada")
++!e:: ReplyTwitterImages("Europe")
++!f:: ReplyTwitterImages("Faggots")
++!g:: ReplyTwitterImages("Globalists")
++!i:: ReplyTwitterImages("Islam")
++!n:: ReplyTwitterImages("Niggers")
++!r:: ReplyTwitterImages("Religion")
 #HotIf
 
-ReplyTwitterImages() {
-  folderWindow.Show() ; Folder selection
-  while (!folderWindow.Value)
-    Sleep(1000)
-  folderPath := "d:\Pictures\Twitter\" MyListBox.Text "\"
+ReplyTwitterImages(what) {
+  ; folderWindow.Show() ; Folder selection
+  ; while (!folderWindow.Value)
+  ;   Sleep(1000)
+  ; folderPath := "d:\Pictures\Twitter\" MyListBox.Text "\"
+  folderPath := "d:\Pictures\Twitter\" what "\"
   totalImages := 0
   loop files folderPath "*.png" ; Count total number of images
     totalImages += 1
@@ -155,14 +167,14 @@ ReplyTwitterImages() {
 ^!p:: ReplyTwitterVideos("Palestinians")
 #HotIf
 
-ReplyTwitterVideos(who) {
-  if (who = "Biden")
+ReplyTwitterVideos(what) {
+  if (what = "Biden")
     videos := ["1833823927249834280", "1833823970442772915", "1833824018253726162", "1833824063354986611", "1833824108284461241", "1833824150567186673", "1833824209656508508", "1833824272134832592", "1833824332574802168", "1833824391064436772"]
-  if (who = "Canada")
+  if (what = "Canada")
     videos := ["1833824452821303500", "1833824520798388720", "1833824604130795649", "1833824669843038641", "1833824734791774583"]
-  if (who = "Kamala")
+  if (what = "Kamala")
     videos := ["1833824804056502617", "1833824908113072379", "1833825013201346695", "1833825086190612738", "1833825212615242152", "1833825270257643727", "1833825293255024882", "1833825446837846075", "1833825544011485251", "1833825621614428665", "1833825706469450032", "1833825783246193076", "1833825869371973633", "1833825960954560692", "1833826011571507399", "1833826087354122340", "1833826158174998888", "1833826215355990259", "1833826274482979285", "1833826328946086056", "1833826387662143808"]
-  if (who = "Palestinians")
+  if (what = "Palestinians")
     videos := ["1833826494382006282", "1833826578251362760", "1833826652859556324", "1833826734317117865", "1833826786431385881", "1833826856694362155", "1833826913611038997", "1833826992518516810", "1833835299715096761", "1833835443592548698", "1833835561523540343", "1833835607853858996", "1833835736816033837", "1833835922426638453", "1833836011245228320", "1833836076495933628", "1833836120959807604", "1833836183232614421", "1833836310039048306", "1833836430482645204", "1833836527165616224"]
 
   loop videos.Length { ; Loop through all videos in the array
@@ -218,7 +230,7 @@ UploadRumbleVideos() {
     A_Clipboard := StrReplace(A_LoopFileFullPath, ".mp4", ".png")
     Send(A_Clipboard) ; Enter thumbnail file name to upload
     Sleep(1000)
-    Send("{Enter}")
+    Send("{Enter}") ; Click Enter to upload
     Sleep(1000)
     Send("{Tab 2}") ; Scroll to the bottom
     Sleep(100)
@@ -335,3 +347,5 @@ DeleteAuthorizedApps() {
 ::whats::what's
 ::wont::won't
 ::wouldnt::wouldn't
+::lol::LOL
+::lmao::LMAO
