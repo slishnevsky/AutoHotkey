@@ -34,24 +34,24 @@ ShowMessageBox(message) {
 ; -------------------------------------------------------------------------------
 ; Folder selection window
 ; -------------------------------------------------------------------------------
-#HotIf WinActive("ahk_id" folderWindow.Hwnd) ; Submit selection by pressing Enter
-Enter::
-NumpadEnter:: folderWindow.Value := folderWindow.Submit()
-#HotIf
+; #HotIf WinActive("ahk_id" folderWindow.Hwnd) ; Submit selection by pressing Enter
+; Enter::
+; NumpadEnter:: folderWindow.Value := folderWindow.Submit()
+; #HotIf
 
-folderWindow := Gui("AlwaysOnTop")
-folderWindow.SetFont("s10", "Bahnschrift")
-folderWindow.AddText(, "Select your folder")
-folderArray := [] ; Initialize an empty array to store folder names
-rootFolderPath := "d:\Pictures\Twitter\"
-loop files rootFolderPath "*", "D" { ; Loop through items in the directory
-  currentItem := A_LoopFileFullPath
-  ; Get the folder name and add it to the array
-  folderName := SubStr(currentItem, InStr(currentItem, "\", , -1) + 1)  ; Extract folder name from full path
-  folderArray.push(folderName)  ; Add folder name to the array
-}
-MyListBox := folderWindow.AddListBox("r" folderArray.Length " Choose1 w200", folderArray)
-folderWindow.Value := 0
+; folderWindow := Gui("AlwaysOnTop")
+; folderWindow.SetFont("s10", "Bahnschrift")
+; folderWindow.AddText(, "Select your folder")
+; folderArray := [] ; Initialize an empty array to store folder names
+; rootFolderPath := "d:\Pictures\Twitter\"
+; loop files rootFolderPath "*", "D" { ; Loop through items in the directory
+;   currentItem := A_LoopFileFullPath
+;   ; Get the folder name and add it to the array
+;   folderName := SubStr(currentItem, InStr(currentItem, "\", , -1) + 1)  ; Extract folder name from full path
+;   folderArray.push(folderName)  ; Add folder name to the array
+; }
+; MyListBox := folderWindow.AddListBox("r" folderArray.Length " Choose1 w200", folderArray)
+; folderWindow.Value := 0
 
 ; -------------------------------------------------------------------------------
 ; InsertTweeterPosts
@@ -134,10 +134,6 @@ UploadTweeterVideos() {
 #HotIf
 
 ReplyTwitterImages(what) {
-  ; folderWindow.Show() ; Folder selection
-  ; while (!folderWindow.Value)
-  ;   Sleep(1000)
-  ; folderPath := "d:\Pictures\Twitter\" MyListBox.Text "\"
   folderPath := "d:\Pictures\Twitter\" what "\"
   totalImages := 0
   loop files folderPath "*.png" ; Count total number of images
@@ -347,5 +343,3 @@ DeleteAuthorizedApps() {
 ::whats::what's
 ::wont::won't
 ::wouldnt::wouldn't
-::lol::LOL
-::lmao::LMAO
