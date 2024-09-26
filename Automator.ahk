@@ -1,4 +1,4 @@
-﻿#Requires AutoHotkey v2
+#Requires AutoHotkey v2
 #Warn ; Recommended for catching common errors
 #SingleInstance force ; Ensures only one instance of the script is running
 #Include WinClipAPI.ahk ; WinClip external library
@@ -7,6 +7,11 @@
 ; -------------------------------------------------------------------------------
 ; Replacements
 ; -------------------------------------------------------------------------------
+::ss::Slava Lishnevsky
+::sss::slishnevsky@gmail.com
+::kk::Кровинушка
+::kkk::krovinushka1@gmail.com
+
 ::cant::can't
 ::couldnt::couldn't
 ::dont::don't
@@ -21,12 +26,11 @@
 ::whats::what's
 ::wont::won't
 ::wouldnt::wouldn't
-::чтото::что-то
 
 ; -------------------------------------------------------------------------------
 ; General actions
 ; -------------------------------------------------------------------------------
-#Esc:: ExitApp ; Terminates AutoHotkey app completely
+^!End:: Reload ; Reloads AutoHotkey script
 #WheelUp:: Send("{Volume_Up}")
 #WheelDown:: Send("{Volume_Down}")
 Pause:: DllCall("PowrProf\SetSuspendState", "Int", 0, "Int", 0, "Int", 0) ; Puts a PC into sleep mode
@@ -72,10 +76,74 @@ MyListBox := folderWindow.AddListBox("r" folderArray.Length " Choose1 w200", fol
 folderWindow.Value := 0
 
 ; -------------------------------------------------------------------------------
+; ReplyTwitterImages
+; -------------------------------------------------------------------------------
+#HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "on X")
++Ins:: ReplyTwitterImages()
+#HotIf
+
+ReplyTwitterImages() {
+  folderWindow.Show() ; Folder selection
+  while (!folderWindow.Value)
+    Sleep(1000)
+  folderPath := "d:\Pictures\Twitter\" MyListBox.Text "\"
+  totalImages := 0
+  loop files folderPath "*.png" ; Count total number of images
+    totalImages += 1
+  ShowMessageBox("Found " totalImages " images")
+  loop files folderPath "*.png" { ; Loop through all images in the folder
+    ShowMessageBox("Posting image " A_Index " of " totalImages)
+    wc := WinClip()
+    wc.Clear()
+    wc.SetBitmap(A_LoopFileFullPath)
+    wc.Paste()
+    Sleep(1000)
+    Send("^{Enter}")
+    Sleep(2000)
+  }
+  ShowMessageBox("Task completed")
+  Reload()
+}
+
+; -------------------------------------------------------------------------------
+; ReplyTwitterVideos
+; -------------------------------------------------------------------------------
+#HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "on X")
+^Ins:: ReplyTwitterVideos()
+#HotIf
+
+ReplyTwitterVideos() {
+  folderWindow.Show() ; Folder selection
+  while (!folderWindow.Value)
+    Sleep(1000)
+  folderPath := "d:\Videos\Twitter\" MyListBox.Text "\"
+  totalImages := 0
+  ; Biden
+  ; videos := ["1837606063354663231", "1837606116982710615", "1837606170439438542", "1837606214491881711", "1837606266102854116", "1837606309128294514", "1837606378317266975", "1837606447699665062", "1837606515483537505", "1837606569829117975"]
+  ; Trudeau
+  ; videos := ["1837606718358147313", "1837606803011498316", "1837606900013080939", "1837606958033260804", "1837607014945464767"]
+  ; Kamala
+  ; videos := ["1837609261393756463", "1837609363877265820", "1837609426796032239", "1837609491560648907", "1837609599840801163", "1837609675996426710", "1837609731734606000", "1837609853402894451", "1837609906431557950", "1837609995736641719", "1837610093917138998", "1837610166617100585", "1837610261298937918", "1837610348351983972", "1837610436214108460", "1837610533903912994", "1837610610671931409", "1837610679492399439", "1837610729731485756", "1837610796232462792", "1837610865358414152", "1837610918693269565", "1837610982157230403", "1837611041422778398", "1837611089695015273"]
+  ; Palestinians
+  videos := ["1837607224396702022", "1837607324665446706", "1837607405200232868", "1837607487182123202", "1837607551711535396", "1837607656023851171", "1837607707177869548", "1837607775561552281", "1837607831798714616", "1837607980784931082", "1837608114096345333", "1837608166181556634", "1837608296166871070", "1837608487549059509", "1837608557002289183", "1837608622979010877", "1837608669158023275", "1837608739009860026", "1837608884124422302", "1837609117973991726", "1837609026877604093"]
+
+  loop videos.Length { ; Loop through all videos in the array
+    ShowMessageBox("Posting video " A_Index " of " videos.Length)
+    A_Clipboard := "PALESTINIANS = HAMAS = TERRORISTS !!! https://x.com/krovinushka1/status/" videos[A_Index]
+    Send("^v")
+    Sleep(1000)
+    Send("^{Enter}")
+    Sleep(2000)
+  }
+  ShowMessageBox("Task completed")
+  Reload()
+}
+
+; -------------------------------------------------------------------------------
 ; UploadTweeterVideos
 ; -------------------------------------------------------------------------------
 #HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "Home / X")
-Ins:: UploadTweeterVideos()
+!Ins:: UploadTweeterVideos()
 #HotIf
 
 UploadTweeterVideos() {
@@ -110,7 +178,7 @@ UploadTweeterVideos() {
 ; DeleteTweeterPosts
 ; -------------------------------------------------------------------------------
 #HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "Krovinushka (Кровинушка) (@krovinushka1) / X")
-Del:: DeleteTweeterPosts()
+!Del:: DeleteTweeterPosts()
 #HotIf
 
 DeleteTweeterPosts() {
@@ -130,136 +198,10 @@ DeleteTweeterPosts() {
 }
 
 ; -------------------------------------------------------------------------------
-; ReplyTwitterImages
-; -------------------------------------------------------------------------------
-#HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "on X")
-Ins:: ReplyTwitterImages()
-#HotIf
-
-ReplyTwitterImages() {
-  folderWindow.Show() ; Folder selection
-  while (!folderWindow.Value)
-    Sleep(1000)
-  folderPath := "d:\Pictures\Twitter\" MyListBox.Text "\"
-  totalImages := 0
-  loop files folderPath "*.png" ; Count total number of images
-    totalImages += 1
-  ShowMessageBox("Found " totalImages " images")
-  loop files folderPath "*.png" { ; Loop through all images in the folder
-    ShowMessageBox("Posting image " A_Index " of " totalImages)
-    wc := WinClip()
-    wc.Clear()
-    wc.SetBitmap(A_LoopFileFullPath)
-    wc.Paste()
-    Sleep(1000)
-    Send("^{Enter}")
-    Sleep(2000)
-  }
-  ShowMessageBox("Task completed")
-  Reload()
-}
-
-; -------------------------------------------------------------------------------
-; ReplyTwitterVideos
-; -------------------------------------------------------------------------------
-#HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "on X")
-^Ins:: ReplyTwitterVideos()
-#HotIf
-
-ReplyTwitterVideos() {
-  what := "Kamala"
-  if (what = "Biden")
-    videos := [
-      "https://x.com/krovinushka1/status/1837606063354663231",
-      "https://x.com/krovinushka1/status/1837606116982710615",
-      "https://x.com/krovinushka1/status/1837606170439438542",
-      "https://x.com/krovinushka1/status/1837606214491881711",
-      "https://x.com/krovinushka1/status/1837606266102854116",
-      "https://x.com/krovinushka1/status/1837606309128294514",
-      "https://x.com/krovinushka1/status/1837606378317266975",
-      "https://x.com/krovinushka1/status/1837606447699665062",
-      "https://x.com/krovinushka1/status/1837606515483537505",
-      "https://x.com/krovinushka1/status/1837606569829117975",
-    ]
-  if (what = "Trudeau")
-    videos := [
-      "https://x.com/krovinushka1/status/1837606718358147313",
-      "https://x.com/krovinushka1/status/1837606803011498316",
-      "https://x.com/krovinushka1/status/1837606900013080939",
-      "https://x.com/krovinushka1/status/1837606958033260804",
-      "https://x.com/krovinushka1/status/1837607014945464767",
-    ]
-  if (what = "Kamala")
-    videos := [
-      "Kamala's electorate https://x.com/krovinushka1/status/1837609261393756463",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837609363877265820",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837609426796032239",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837609491560648907",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837609599840801163",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837609675996426710",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837609731734606000",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837609853402894451",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837609906431557950",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837609995736641719",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837610093917138998",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837610166617100585",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837610261298937918",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837610348351983972",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837610436214108460",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837610533903912994",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837610610671931409",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837610679492399439",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837610729731485756",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837610796232462792",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837610865358414152",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837610918693269565",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837610982157230403",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837611041422778398",
-      "Kamala's electorate https://x.com/krovinushka1/status/1837611089695015273",
-
-    ]
-  if (what = "Palestinians")
-    videos := [
-      "https://x.com/krovinushka1/status/1837607224396702022",
-      "https://x.com/krovinushka1/status/1837607324665446706",
-      "https://x.com/krovinushka1/status/1837607405200232868",
-      "https://x.com/krovinushka1/status/1837607487182123202",
-      "https://x.com/krovinushka1/status/1837607551711535396",
-      "https://x.com/krovinushka1/status/1837607656023851171",
-      "https://x.com/krovinushka1/status/1837607707177869548",
-      "https://x.com/krovinushka1/status/1837607775561552281",
-      "https://x.com/krovinushka1/status/1837607831798714616",
-      "https://x.com/krovinushka1/status/1837607980784931082",
-      "https://x.com/krovinushka1/status/1837608114096345333",
-      "https://x.com/krovinushka1/status/1837608166181556634",
-      "https://x.com/krovinushka1/status/1837608296166871070",
-      "https://x.com/krovinushka1/status/1837608487549059509",
-      "https://x.com/krovinushka1/status/1837608557002289183",
-      "https://x.com/krovinushka1/status/1837608622979010877",
-      "https://x.com/krovinushka1/status/1837608669158023275",
-      "https://x.com/krovinushka1/status/1837608739009860026",
-      "https://x.com/krovinushka1/status/1837608884124422302",
-      "https://x.com/krovinushka1/status/1837609117973991726",
-      "https://x.com/krovinushka1/status/1837609026877604093",
-    ]
-
-  loop videos.Length { ; Loop through all videos in the array
-    ShowMessageBox("Posting video " A_Index " of " videos.Length)
-    A_Clipboard := videos[A_Index]
-    Send("^v")
-    Sleep(1000)
-    Send("^{Enter}")
-    Sleep(2000)
-  }
-  ShowMessageBox("Task completed")
-  Reload()
-}
-
-; -------------------------------------------------------------------------------
 ; UploadRumbleVideos
 ; -------------------------------------------------------------------------------
 #HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "Rumble")
-Ins:: UploadRumbleVideos()
+!Ins:: UploadRumbleVideos()
 #HotIf
 
 UploadRumbleVideos() {
@@ -321,7 +263,7 @@ UploadRumbleVideos() {
 ; DeleteRumbleVideos
 ; -------------------------------------------------------------------------------
 #HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "All videos")
-Del:: DeleteRumbleVideos()
+!Del:: DeleteRumbleVideos()
 #HotIf
 
 DeleteRumbleVideos() {
@@ -339,45 +281,45 @@ DeleteRumbleVideos() {
   DeleteRumbleVideos()
 }
 
-; -------------------------------------------------------------------------------
-; CreateDemotivator
-; -------------------------------------------------------------------------------
-#HotIf WinActive("ahk_exe FSCapture.exe")
-Ins:: CreateDemotivator()
-#HotIf
+; ; -------------------------------------------------------------------------------
+; ; CreateDemotivator
+; ; -------------------------------------------------------------------------------
+; #HotIf WinActive("ahk_exe FSCapture.exe")
+; Ins:: CreateDemotivator()
+; #HotIf
 
-CreateDemotivator() {
-  Send("g") ; White 1px border
-  Sleep(500)
-  Send("{Tab 4}")
-  Send("1")
-  Click(420, 60)
-  Sleep(500)
-  Click(200, 140)
-  Click(40, 280)
-  Send("{Enter}")
-  Send("g") ; Back 10px border
-  Sleep(500)
-  Send("{Tab 4}")
-  Send("10")
-  Click(420, 60)
-  Sleep(500)
-  Click(20, 140)
-  Click(40, 280)
-  Send("{Enter}")
-  Send("t") ; Enter text
-  Sleep(500)
-  Send("^{Enter}") ; Back 10px border
-  Send("g")
-  Send("{Enter}")
-  ShowMessageBox("Task completed")
-}
+; CreateDemotivator() {
+;   Send("g") ; White 1px border
+;   Sleep(500)
+;   Send("{Tab 4}")
+;   Send("1")
+;   Click(420, 60)
+;   Sleep(500)
+;   Click(200, 140)
+;   Click(40, 280)
+;   Send("{Enter}")
+;   Send("g") ; Back 10px border
+;   Sleep(500)
+;   Send("{Tab 4}")
+;   Send("10")
+;   Click(420, 60)
+;   Sleep(500)
+;   Click(20, 140)
+;   Click(40, 280)
+;   Send("{Enter}")
+;   Send("t") ; Enter text
+;   Sleep(500)
+;   Send("^{Enter}") ; Back 10px border
+;   Send("g")
+;   Send("{Enter}")
+;   ShowMessageBox("Task completed")
+; }
 
 ; -------------------------------------------------------------------------------
 ; DeleteAuthorizedApps
 ; -------------------------------------------------------------------------------
 #HotIf WinActive("ahk_exe Chrome.exe") and (InStr(WinGetTitle("A"), "Third-party apps & services") or InStr(WinGetTitle("A"), "Сторонние приложения и сервисы"))
-Del:: DeleteAuthorizedApps()
+!Del:: DeleteAuthorizedApps()
 #HotIf
 
 DeleteAuthorizedApps() {
