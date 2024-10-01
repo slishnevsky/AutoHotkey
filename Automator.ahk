@@ -30,11 +30,12 @@
 ; -------------------------------------------------------------------------------
 ; General actions
 ; -------------------------------------------------------------------------------
-^!End:: Reload ; Reloads AutoHotkey script
-#WheelUp:: Send("{Volume_Up}")
-#WheelDown:: Send("{Volume_Down}")
-Pause:: DllCall("PowrProf\SetSuspendState", "Int", 0, "Int", 0, "Int", 0) ; Puts a PC into sleep mode
-ScrollLock:: { ; Switch between displays
+
+~Esc:: Reload
+; #WheelUp:: Send("{Volume_Up}")
+; #WheelDown:: Send("{Volume_Down}")
+; Pause:: DllCall("PowrProf\SetSuspendState", "Int", 0, "Int", 0, "Int", 0) ; Puts a PC into sleep mode
+#p:: { ; Switch between displays
   static state := false
   Run(state ? "DisplaySwitch.exe /internal" : "DisplaySwitch.exe /external")
   state := !state
@@ -110,22 +111,26 @@ ReplyTwitterImages() {
 
 ReplyTwitterVideos() {
   folder := SelectFolder("d:\Videos\Twitter\")
-  switch [folder] {
-    case "d:\Videos\Twitter\Biden\":
-      videos := ["1837606063354663231", "1837606116982710615", "1837606170439438542", "1837606214491881711", "1837606266102854116", "1837606309128294514", "1837606378317266975", "1837606447699665062", "1837606515483537505", "1837606569829117975"]
-    case "d:\Videos\Twitter\Trudeau\":
-      videos := ["1837606718358147313", "1837606803011498316", "1837606900013080939", "1837606958033260804", "1837607014945464767"]
-    case "d:\Videos\Twitter\Kamala\":
-      videos := ["1837609261393756463", "1837609363877265820", "1837609426796032239", "1837609491560648907", "1837609599840801163", "1837609675996426710", "1837609731734606000", "1837609853402894451", "1837609906431557950", "1837609995736641719", "1837610093917138998", "1837610166617100585", "1837610261298937918", "1837610348351983972", "1837610436214108460", "1837610533903912994", "1837610610671931409", "1837610679492399439", "1837610729731485756", "1837610796232462792", "1837610865358414152", "1837610918693269565", "1837610982157230403", "1837611041422778398", "1837611089695015273"]
-    case "d:\Videos\Twitter\Palestinians\":
-      videos := ["1837607224396702022", "1837607324665446706", "1837607405200232868", "1837607487182123202", "1837607551711535396", "1837607656023851171", "1837607707177869548", "1837607775561552281", "1837607831798714616", "1837607980784931082", "1837608114096345333", "1837608166181556634", "1837608296166871070", "1837608487549059509", "1837608557002289183", "1837608622979010877", "1837608669158023275", "1837608739009860026", "1837608884124422302", "1837609117973991726", "1837609026877604093"]
-    default:
-      return
-    default:
+  videos := []
+  if (folder = "d:\Videos\Twitter\Biden\") {
+    pretext := ""
+    videos := ["1839794506679607731", "1839794549817770245", "1839794606558371886", "1839794651248710038", "1839794703694549336", "1839794747009052715", "1839794831935017323", "1839794902097338743", "1839794960876347742", "1839795015888801829"]
+  }
+  if (folder = "d:\Videos\Twitter\Kamala\") {
+    pretext := "Kamala's electorate "
+    videos := ["1839795648188862941", "1839795740756869331", "1839795805449838628", "1839795874098016684", "1839795977420501242", "1839796058919928053", "1839796118672265344", "1839796265061888393", "1839796318224425215", "1839796429063172595", "1839796502103019993", "1839796606255677738", "1839796694998745145", "1840410239977353253", "1839796774602486020", "1839796852750725541", "1839796934359359771", "1839797014864769368", "1839797103863742612", "1839797152228487524", "1839797221539123348", "1839797286412419106", "1839797340250460218", "1839797404695978345", "1839797462334353881", "1839797510895812953"]
+  }
+  if (folder = "d:\Videos\Twitter\Palestinians\") {
+    pretext := ""
+    videos := ["1839797630215291110", "1839797714168557594", "1839797793587671271", "1839797868799955135", "1839797929575346240", "1839798003764498837", "1839798063277453615", "1839798123616711165", "1839798179405222158", "1839798362792702360", "1839798478446137597", "1839798530866586017", "1839798661271732578", "1839798866582880571", "1839798933352058896", "1839799004210630847", "1839799050087858377", "1839799132946649227", "1839799256275701994", "1839799395522371926", "1839799488728248726"]
+  }
+  if (folder = "d:\Videos\Twitter\Trudeau\") {
+    pretext := ""
+    videos := ["1839799581573284331", "1839799644429136238", "1839799745986109818", "1839799807461691814", "1839799873199321437"]
   }
   loop videos.Length { ; Loop through all videos in the array
     ShowMessageBox("Posting video " A_Index " of " videos.Length)
-    A_Clipboard := "https://x.com/krovinushka1/status/" videos[A_Index]
+    A_Clipboard := pretext "https://x.com/krovinushka1/status/" videos[A_Index]
     Send("^v")
     Sleep(1000)
     Send("^{Enter}")
@@ -143,13 +148,13 @@ ReplyTwitterVideos() {
 #HotIf
 
 UploadTweeterVideos() {
-  folderPath := "d:\Videos\Twitter\Kamala\" ; Upload videos from this folder
+  folder := SelectFolder("d:\Videos\Twitter\") ; Upload videos from this folder
   count := 0 ; Count number of files in that folder
-  loop files folderPath "*.mp4" ; Count total number of videos
+  loop files folder "*.mp4" ; Count total number of videos
     count++
   ShowMessageBox("Found " count " videos")
   firstTime := true
-  loop files folderPath "*.mp4" { ; Loop through all videos in the folder
+  loop files folder "*.mp4" { ; Loop through all videos in the folder
     ShowMessageBox("Uploading `"" A_LoopFileName "`"")
     A_Clipboard := SubStr(StrReplace(A_LoopFileName, ".mp4", ""), 5)
     Send("^v")
@@ -173,7 +178,7 @@ UploadTweeterVideos() {
 ; -------------------------------------------------------------------------------
 ; DeleteTweeterPosts
 ; -------------------------------------------------------------------------------
-#HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "Krovinushka (Кровинушка) (@krovinushka1) / X")
+#HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "Кровинушка (@krovinushka1) / X")
 !Del:: DeleteTweeterPosts()
 #HotIf
 
