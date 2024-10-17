@@ -5,14 +5,11 @@
 #Include WinClip.ahk ; WinClip external library
 #Include "TwitterData.ahk"
 
+:*:ppp::gorLubUlKir1440
+
 ; -------------------------------------------------------------------------------
 ; Replacements
 ; -------------------------------------------------------------------------------
-::ss::Slava Lishnevsky
-::sss::slishnevsky@gmail.com
-::kk::Кровинушка
-::kkk::krovinushka1@gmail.com
-
 ::cant::can't
 ::couldnt::couldn't
 ::dont::don't
@@ -21,17 +18,18 @@
 ::havent::haven't
 ::hasnt::hasn't
 ::hadnt::hadn't
-::ive::iv'e
 ::thats::that's
 ::wasnt::wasn't
 ::whats::what's
 ::wont::won't
 ::wouldnt::wouldn't
+::shouldnt::shouldn't
 
 ; -------------------------------------------------------------------------------
 ; General actions
 ; -------------------------------------------------------------------------------
 
+; SetCapsLockState "AlwaysOff"
 ~Esc:: Reload
 #WheelUp:: Send("{Volume_Up}")
 #WheelDown:: Send("{Volume_Down}")
@@ -41,6 +39,8 @@ ScrollLock:: { ; Switch between displays
   Run(state ? "DisplaySwitch.exe /internal" : "DisplaySwitch.exe /external")
   state := !state
 }
+^!h:: Run("https://slishnevsky.github.io/")
+
 
 ; -------------------------------------------------------------------------------
 ; ShowMessageBox
