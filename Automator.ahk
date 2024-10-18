@@ -5,8 +5,6 @@
 #Include WinClip.ahk ; WinClip external library
 #Include "TwitterData.ahk"
 
-:*:ppp::gorLubUlKir1440
-
 ; -------------------------------------------------------------------------------
 ; Replacements
 ; -------------------------------------------------------------------------------
