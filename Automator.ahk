@@ -31,14 +31,16 @@
 ~Esc:: Reload
 #WheelUp:: Send("{Volume_Up}")
 #WheelDown:: Send("{Volume_Down}")
-Pause:: DllCall("PowrProf\SetSuspendState", "Int", 0, "Int", 0, "Int", 0) ; Puts a PC into sleep mode
+Pause:: {
+  ; DllCall("PowrProf\SetSuspendState", "Int", 0, "Int", 0, "Int", 0) ; Puts a PC into sleep mode
+  Run("NirCmd/nircmd.exe standby")
+  Run("NirCmd/nircmd.exe emptybin")
+}
 ScrollLock:: { ; Switch between displays
   static state := false
   Run(state ? "DisplaySwitch.exe /internal" : "DisplaySwitch.exe /external")
   state := !state
 }
-^!h:: Run("https://slishnevsky.github.io/")
-
 
 ; -------------------------------------------------------------------------------
 ; ShowMessageBox
@@ -78,6 +80,13 @@ SelectFolder(parentFolder) {
   return selection
 }
 
+GetFolderName() {
+  folderPath := "d:\Pictures\Twitter\"
+  SplitPath(folderPath, , &OutDir)
+  folderName := StrReplace(OutDir, "d:\Pictures\Twitter\", "")
+  return folderName
+}
+
 ; -------------------------------------------------------------------------------
 ; ReplyTwitterImages
 ; -------------------------------------------------------------------------------
@@ -86,13 +95,21 @@ SelectFolder(parentFolder) {
 #HotIf
 
 ReplyTwitterImages() {
-  folder := SelectFolder("d:\Pictures\Twitter\")
+  folderPath := SelectFolder("d:\Pictures\Twitter\")
   count := 0
-  loop files folder "*.png" ; Count total number of images
-    count += 1
+  loop files folderPath "*.png" ; Count total number of images
+    count++
   ShowMessageBox("Found " count " images")
-  loop files folder "*.png" { ; Loop through all images in the folder
+  SplitPath(folderPath, , &OutDir)
+  folderName := GetFolderName()
+  isGlobalists := (folderName = "UN" || folderName = "UNRWA" || folderName = "WEF" || folderName = "WHO")
+  loop files folderPath "*.png" { ; Loop through all images in the folder
     ShowMessageBox("Posting image " A_Index " of " count)
+    if (isGlobalists) {
+      A_Clipboard := '@UN, @UNRWA, @UNIFIL, @WHO, @WEF, @UNICEF, @AMNESTY, @OCHA, ETC... EVERYTHING THAT STARTS WITH "UN" ARE LYING ANTI-SEMITIC ISLAMO-FASCIST NAZI SCUM, SPONSORS OF ISLAMIC TERRORISM, GLOBAL THREAT.`n#DEFUNDTHEUN, #DEFUNDUNRWA, #DEFUNDUNIFIL, #DEFUNDUNICEF'
+      Send("^v")
+      Sleep(100)
+    }
     wc := WinClip()
     wc.Clear()
     wc.SetBitmap(A_LoopFileFullPath)
@@ -114,14 +131,14 @@ ReplyTwitterImages() {
 
 ReplyTwitterVideos() {
   posts := []
-  folder := SelectFolder("d:\Videos\Twitter\")
-  if (folder = "d:\Videos\Twitter\Biden\")
+  folderPath := SelectFolder("d:\Videos\Twitter\")
+  if (folderPath = "d:\Videos\Twitter\Biden\")
     posts := Biden
-  if (folder = "d:\Videos\Twitter\Kamala\")
+  if (folderPath = "d:\Videos\Twitter\Kamala\")
     posts := Kamala
-  if (folder = "d:\Videos\Twitter\Palestinians\")
+  if (folderPath = "d:\Videos\Twitter\Palestinians\")
     posts := Palestinians
-  if (folder = "d:\Videos\Twitter\Trudeau\")
+  if (folderPath = "d:\Videos\Twitter\Trudeau\")
     posts := Trudeau
   loop posts.Length { ; Loop through all posts in array
     ShowMessageBox("Posting video " A_Index " of " posts.Length)
@@ -143,15 +160,15 @@ ReplyTwitterVideos() {
 #HotIf
 
 UploadTweeterVideos() {
-  folder := SelectFolder("d:\Videos\Twitter\") ; Upload videos from this folder
+  folderPath := SelectFolder("d:\Videos\Twitter\") ; Upload videos from this folder
   count := 0 ; Count number of files in that folder
-  loop files folder "*.mp4" ; Count total number of videos
+  loop files folderPath "*.mp4" ; Count total number of videos
     count++
   ShowMessageBox("Found " count " videos")
   firstTime := true
-  loop files folder "*.mp4" { ; Loop through all videos in the folder
+  loop files folderPath "*.mp4" { ; Loop through all videos in the folder
     ShowMessageBox("Uploading `"" A_LoopFileName "`"")
-    A_Clipboard := SubStr(StrReplace(A_LoopFileName, ".mp4", ""), 5)
+    A_Clipboard := SubStr(StrReplace(A_LoopFileName, ".mp4", ""), 7)
     Send("^v")
     Sleep(1000)
     wc := WinClip()
