@@ -28,7 +28,10 @@
 ; -------------------------------------------------------------------------------
 
 ; SetCapsLockState "AlwaysOff"
-~Esc:: Reload
+~Esc:: {
+  Reload
+  Run("NirCmd/nircmd.exe emptybin")
+}
 #WheelUp:: Send("{Volume_Up}")
 #WheelDown:: Send("{Volume_Down}")
 Pause:: {
@@ -47,7 +50,7 @@ ScrollLock:: { ; Switch between displays
 ; -------------------------------------------------------------------------------
 ShowMessageBox(message) {
   messageBox := Gui("-Caption")
-  messageBox.BackColor := "BF2517"
+  messageBox.BackColor := "0E639C"
   messageBox.SetFont("s20 cWhite", "Bahnschrift")
   messageBox.AddText("Center", message)
   messageBox.Show()
@@ -80,8 +83,7 @@ SelectFolder(parentFolder) {
   return selection
 }
 
-GetFolderName() {
-  folderPath := "d:\Pictures\Twitter\"
+GetFolderName(folderPath) {
   SplitPath(folderPath, , &OutDir)
   folderName := StrReplace(OutDir, "d:\Pictures\Twitter\", "")
   return folderName
@@ -100,13 +102,12 @@ ReplyTwitterImages() {
   loop files folderPath "*.png" ; Count total number of images
     count++
   ShowMessageBox("Found " count " images")
-  SplitPath(folderPath, , &OutDir)
-  folderName := GetFolderName()
+  folderName := GetFolderName(folderPath)
   isGlobalists := (folderName = "UN" || folderName = "UNRWA" || folderName = "WEF" || folderName = "WHO")
   loop files folderPath "*.png" { ; Loop through all images in the folder
     ShowMessageBox("Posting image " A_Index " of " count)
     if (isGlobalists) {
-      A_Clipboard := '@UN, @UNRWA, @UNIFIL, @WHO, @WEF, @UNICEF, @AMNESTY, @OCHA, ETC... EVERYTHING THAT STARTS WITH "UN" ARE LYING ANTI-SEMITIC ISLAMO-FASCIST NAZI SCUM, SPONSORS OF ISLAMIC TERRORISM, GLOBAL THREAT.`n#DEFUNDTHEUN, #DEFUNDUNRWA, #DEFUNDUNIFIL, #DEFUNDUNICEF'
+      A_Clipboard := '@UN, @UNRWA, @UNIFIL, @WHO, @WEF, @UNICEF, @AMNESTY, @OCHA, ETC...`nEVERYTHING THAT STARTS WITH "UN" ARE LYING ANTISEMITIC ISLAMOFASCIST SCUM. SPONSORS OF ISLAMIC TERRORISM. GLOBAL THREAT. MODERN FASCISM.`n#DEFUNDTHEUN, #DEFUNDUNRWA, #DEFUNDUNIFIL, #DEFUNDUNICEF'
       Send("^v")
       Sleep(100)
     }
