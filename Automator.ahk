@@ -45,6 +45,10 @@ ScrollLock:: { ; Switch between displays
   state := !state
 }
 
+TWITTER_PICTURES := "d:\Pictures\Twitter"
+TWITTER_VIDEOS := "d:\Videos\Twitter"
+RUMBLE_VIDEOS := "d:\Videos\Rumble"
+
 ; -------------------------------------------------------------------------------
 ; ShowMessageBox
 ; -------------------------------------------------------------------------------
@@ -59,37 +63,6 @@ ShowMessageBox(message) {
 }
 
 ; -------------------------------------------------------------------------------
-; Folder selection window
-; -------------------------------------------------------------------------------
-SelectFolder(parentFolder) {
-  global window := Gui("AlwaysOnTop")
-  window.SetFont("s10", "Bahnschrift")
-  window.AddText(, "Select your folder")
-  folders := [] ; Initialize an empty array to store folder names
-  loop files parentFolder "\*", "D" { ; Loop through items in the directory
-    folders.push(A_LoopFileFullPath "\")  ; Add folder path to the array
-  }
-  selection := ""
-  listbox := window.AddListBox("r" folders.Length " Choose1 w200", folders)
-  listbox.OnEvent("DoubleClick", (*) => (
-    selection := listbox.Text
-    window.Hide()))
-  button := window.AddButton("Default w80", "OK")
-  button.OnEvent("Click", (*) => (
-    selection := listbox.Text
-    window.Hide()))
-  window.Show()
-  WinWaitClose(window)
-  return selection
-}
-
-GetFolderName(folderPath) {
-  SplitPath(folderPath, , &OutDir)
-  folderName := StrReplace(OutDir, "d:\Pictures\Twitter\", "")
-  return folderName
-}
-
-; -------------------------------------------------------------------------------
 ; ReplyTwitterImages
 ; -------------------------------------------------------------------------------
 #HotIf WinActive("ahk_exe Chrome.exe") and InStr(WinGetTitle("A"), "on X")
@@ -97,20 +70,18 @@ GetFolderName(folderPath) {
 #HotIf
 
 ReplyTwitterImages() {
-  folderPath := SelectFolder("d:\Pictures\Twitter\")
+  folderPath := DirSelect(TWITTER_PICTURES, 0)
+  if(folderPath == "") 
+    return
   count := 0
-  loop files folderPath "*.png" ; Count total number of images
+  loop files folderPath "\*.png" ; Count total number of images
     count++
   ShowMessageBox("Found " count " images")
-  folderName := GetFolderName(folderPath)
-  isGlobalists := (folderName = "UN" || folderName = "UNRWA" || folderName = "WEF" || folderName = "WHO")
-  loop files folderPath "*.png" { ; Loop through all images in the folder
+  SplitPath(folderPath, &folderName, &OutDir, &OutExtension, &OutNameNoExt, &OutDrive)
+  if(folderName == "") 
+    return
+  loop files folderPath "\*.png" { ; Loop through all images in the folder
     ShowMessageBox("Posting image " A_Index " of " count)
-    if (isGlobalists) {
-      A_Clipboard := '@UN, @UNRWA, @UNIFIL, @WHO, @WEF, @UNICEF, @AMNESTY, @OCHA, ETC...`nEVERYTHING THAT STARTS WITH "UN" ARE LYING ANTISEMITIC ISLAMOFASCIST SCUM. SPONSORS OF ISLAMIC TERRORISM. GLOBAL THREAT. MODERN FASCISM.`n#DEFUNDTHEUN, #DEFUNDUNRWA, #DEFUNDUNIFIL, #DEFUNDUNICEF'
-      Send("^v")
-      Sleep(100)
-    }
     wc := WinClip()
     wc.Clear()
     wc.SetBitmap(A_LoopFileFullPath)
@@ -132,14 +103,17 @@ ReplyTwitterImages() {
 
 ReplyTwitterVideos() {
   posts := []
-  folderPath := SelectFolder("d:\Videos\Twitter\")
-  if (folderPath = "d:\Videos\Twitter\Biden\")
+  folderPath := DirSelect(TWITTER_VIDEOS, 0)
+  SplitPath(folderPath, &folderName, &OutDir, &OutExtension, &OutNameNoExt, &OutDrive)
+  if(folderName == "") 
+    return
+  if (folderName == "Biden")
     posts := Biden
-  if (folderPath = "d:\Videos\Twitter\Kamala\")
+  if (folderName == "Kamala")
     posts := Kamala
-  if (folderPath = "d:\Videos\Twitter\Palestinians\")
+  if (folderName == "Palestinians")
     posts := Palestinians
-  if (folderPath = "d:\Videos\Twitter\Trudeau\")
+  if (folderName == "Trudeau")
     posts := Trudeau
   loop posts.Length { ; Loop through all posts in array
     ShowMessageBox("Posting video " A_Index " of " posts.Length)
@@ -161,13 +135,13 @@ ReplyTwitterVideos() {
 #HotIf
 
 UploadTweeterVideos() {
-  folderPath := SelectFolder("d:\Videos\Twitter\") ; Upload videos from this folder
+  folderPath := DirSelect(TWITTER_VIDEOS, 0) ; Upload videos from this folder
   count := 0 ; Count number of files in that folder
-  loop files folderPath "*.mp4" ; Count total number of videos
+  loop files folderPath "\*.mp4" ; Count total number of videos
     count++
   ShowMessageBox("Found " count " videos")
   firstTime := true
-  loop files folderPath "*.mp4" { ; Loop through all videos in the folder
+  loop files folderPath "\*.mp4" { ; Loop through all videos in the folder
     ShowMessageBox("Uploading `"" A_LoopFileName "`"")
     A_Clipboard := SubStr(StrReplace(A_LoopFileName, ".mp4", ""), 7)
     Send("^v")
@@ -219,12 +193,12 @@ DeleteTweeterPosts() {
 #HotIf
 
 UploadRumbleVideos() {
-  folderPath := "d:\Videos\Rumble\" ; Upload videos from this folder
+  folderPath := RUMBLE_VIDEOS ; Upload videos from this folder
   totalVideos := 0 ; Count number of files in that folder
-  loop files folderPath "*.mp4" ; Count total number of videos
+  loop files folderPath "\*.mp4" ; Count total number of videos
     totalVideos++
   ShowMessageBox("Found " totalVideos " videos")
-  loop files folderPath "*.mp4" { ; Loop through all videos in the folder
+  loop files folderPath "\*.mp4" { ; Loop through all videos in the folder
     ShowMessageBox("Uploading `"" A_LoopFileName "`"")
     Click(1757, 154) ; Click Upload button
     Sleep(1000)
@@ -312,40 +286,6 @@ DeleteAuthorizedApps() {
   Sleep(8000)
   DeleteAuthorizedApps()
 }
-
-; ; -------------------------------------------------------------------------------
-; ; CreateDemotivator
-; ; -------------------------------------------------------------------------------
-; #HotIf WinActive("ahk_exe FSCapture.exe")
-; Ins:: CreateDemotivator()
-; #HotIf
-
-; CreateDemotivator() {
-;   Send("g") ; White 1px border
-;   Sleep(500)
-;   Send("{Tab 4}")
-;   Send("1")
-;   Click(420, 60)
-;   Sleep(500)
-;   Click(200, 140)
-;   Click(40, 280)
-;   Send("{Enter}")
-;   Send("g") ; Back 10px border
-;   Sleep(500)
-;   Send("{Tab 4}")
-;   Send("10")
-;   Click(420, 60)
-;   Sleep(500)
-;   Click(20, 140)
-;   Click(40, 280)
-;   Send("{Enter}")
-;   Send("t") ; Enter text
-;   Sleep(500)
-;   Send("^{Enter}") ; Back 10px border
-;   Send("g")
-;   Send("{Enter}")
-;   ShowMessageBox("Task completed")
-; }
 
 ; -------------------------------------------------------------------------------
 ; DeleteRumbleRezkaHistory
