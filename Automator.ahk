@@ -1,9 +1,10 @@
 #Requires AutoHotkey v2
 #Warn ; Recommended for catching common errors
 #SingleInstance force ; Ensures only one instance of the script is running
-#Include WinClipAPI.ahk ; WinClip external library
-#Include WinClip.ahk ; WinClip external library
-#Include "TwitterData.ahk"
+#Include "Automator.Lib.ahk" ; External library
+#Include "Automator.Data.ahk" ; Data file
+#Include "WinClip.ahk"  ; WinClip external library
+#Include "WinClipAPI.ahk" ; WinClip external library
 
 ; -------------------------------------------------------------------------------
 ; Replacements
@@ -25,43 +26,30 @@
 ::shouldnt::shouldn't
 
 ; -------------------------------------------------------------------------------
-; General
+; General actions
 ; -------------------------------------------------------------------------------
+nircmd := "d:\\Apps\\Tools\\NirCmd\\nircmd.exe"
 
 ~Esc:: {
-  Reload
-  Run("NirCmd/nircmd.exe emptybin")
+  Reload()
+  Run(nircmd " emptybin")
 }
-; Disable CapsLock
-SetCapsLockState "AlwaysOff"
+
+SetCapsLockState("AlwaysOff") ; Turns Off CapsLock key
 ; Control volume
-#WheelUp:: Send("{Volume_Up}")
-#WheelDown:: Send("{Volume_Down}")
-; Put PC in sleep mode
-nircmd := "d:\\Apps\\Tools\\NirCmd\\nircmd.exe"
-Pause:: {
+; #WheelUp:: Send("{Volume_Up}")
+; #WheelDown:: Send("{Volume_Down}")
+
+Pause:: { ; Put PC in sleep mode
   Run(nircmd " standby")
   Run(nircmd " emptybin")
 }
-; Switch between displays
-ScrollLock:: {
+
+ScrollLock:: { ; Switch between displays
   static state := false
   Run(state ? "DisplaySwitch.exe /internal" : "DisplaySwitch.exe /external")
   ; Run(state ? nircmd " setprimarydisplay 1" : nircmd " setprimarydisplay 2")
   state := !state
-}
-
-; -------------------------------------------------------------------------------
-; ShowMessageBox
-; -------------------------------------------------------------------------------
-ShowMessageBox(message) {
-  messageBox := Gui("-Caption")
-  messageBox.BackColor := "0E639C"
-  messageBox.SetFont("s20 cWhite", "Bahnschrift")
-  messageBox.AddText("Center", message)
-  messageBox.Show()
-  Sleep(1000)
-  messageBox.Hide()
 }
 
 ; -------------------------------------------------------------------------------
@@ -104,21 +92,8 @@ ReplyTwitterImages() {
 }
 
 ReplyTwitterVideos() {
-  posts := []
-  folderPath := DirSelect("d:\Videos\Twitter", 0)
-  SplitPath(folderPath, &folderName, &OutDir, &OutExtension, &OutNameNoExt, &OutDrive)
-  if (folderName == "")
-    return
-  if (folderName == "Biden")
-    posts := Biden
-  if (folderName == "Kamala")
-    posts := Kamala
-  if (folderName == "Palestinians")
-    posts := Palestinians
-  if (folderName == "Trudeau")
-    posts := Trudeau
-  if (folderName == "Ezra")
-    posts := Ezra
+  category := SelectCategory()
+  posts := category.values
   loop posts.Length { ; Loop through all posts in array
     ShowMessageBox("Posting video " A_Index " of " posts.Length)
     A_Clipboard := posts[A_Index]
