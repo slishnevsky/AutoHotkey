@@ -27,23 +27,29 @@
 ; -------------------------------------------------------------------------------
 ; General
 ; -------------------------------------------------------------------------------
+
 ~Esc:: {
   Reload
   Run("NirCmd/nircmd.exe emptybin")
 }
-; SetCapsLockState "AlwaysOff"
-; #WheelUp:: Send("{Volume_Up}")
-; #WheelDown:: Send("{Volume_Down}")
-; Pause:: {
-;   ; DllCall("PowrProf\SetSuspendState", "Int", 0, "Int", 0, "Int", 0) ; Puts a PC into sleep mode
-;   Run("NirCmd/nircmd.exe standby")
-;   Run("NirCmd/nircmd.exe emptybin")
-; }
-; ScrollLock:: { ; Switch between displays
-;   static state := false
-;   Run(state ? "DisplaySwitch.exe /internal" : "DisplaySwitch.exe /external")
-;   state := !state
-; }
+; Disable CapsLock
+SetCapsLockState "AlwaysOff"
+; Control volume
+#WheelUp:: Send("{Volume_Up}")
+#WheelDown:: Send("{Volume_Down}")
+; Put PC in sleep mode
+nircmd := "d:\\Apps\\Tools\\NirCmd\\nircmd.exe"
+Pause:: {
+  Run(nircmd " standby")
+  Run(nircmd " emptybin")
+}
+; Switch between displays
+ScrollLock:: {
+  static state := false
+  Run(state ? "DisplaySwitch.exe /internal" : "DisplaySwitch.exe /external")
+  ; Run(state ? nircmd " setprimarydisplay 1" : nircmd " setprimarydisplay 2")
+  state := !state
+}
 
 ; -------------------------------------------------------------------------------
 ; ShowMessageBox
