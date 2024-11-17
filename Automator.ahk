@@ -28,11 +28,10 @@
 ; -------------------------------------------------------------------------------
 ; General actions
 ; -------------------------------------------------------------------------------
-nircmd := "d:/Apps/Tools/NirCmd/nircmd.exe"
 
 ~Esc:: {
   Reload()
-  Run(nircmd " emptybin")
+  Run("nircmd/nircmd.exe emptybin")
 }
 
 ; SetCapsLockState("AlwaysOff") ; Turns Off CapsLock key
@@ -42,14 +41,14 @@ nircmd := "d:/Apps/Tools/NirCmd/nircmd.exe"
 #WheelDown:: Send("{Volume_Down}")
 
 Pause:: { ; Put PC in sleep mode
-  Run(nircmd " emptybin")
-  Run(nircmd " standby")
+  Run("nircmd/nircmd.exe emptybin")
+  Run("nircmd/nircmd.exe standby")
 }
 
 ScrollLock:: { ; Switch between displays
   static state := false
   Run(state ? "DisplaySwitch.exe /internal" : "DisplaySwitch.exe /external")
-  ; Run(state ? nircmd " setprimarydisplay 1" : nircmd " setprimarydisplay 2")
+  ; Run(state ? "nircmd/nircmd.exe setprimarydisplay 1" : "nircmd/nircmd.exe setprimarydisplay 2")
   state := !state
 }
 
