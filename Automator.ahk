@@ -3,8 +3,8 @@
 #SingleInstance force ; Ensures only one instance of the script is running
 #Include "Automator.Lib.ahk" ; External library
 #Include "Automator.Data.ahk" ; Data file
-#Include "WinClip.ahk"  ; WinClip external library
-#Include "WinClipAPI.ahk" ; WinClip external library
+#Include "Libs\WinClip.ahk"  ; WinClip external library
+#Include "Libs\WinClipAPI.ahk" ; WinClip external library
 
 ; -------------------------------------------------------------------------------
 ; Replacements
@@ -28,21 +28,22 @@
 ; -------------------------------------------------------------------------------
 ; General actions
 ; -------------------------------------------------------------------------------
-nircmd := "d:\\Apps\\Tools\\NirCmd\\nircmd.exe"
+nircmd := "d:/Apps/Tools/NirCmd/nircmd.exe"
 
 ~Esc:: {
   Reload()
   Run(nircmd " emptybin")
 }
 
-SetCapsLockState("AlwaysOff") ; Turns Off CapsLock key
+; SetCapsLockState("AlwaysOff") ; Turns Off CapsLock key
 ; Control volume
-; #WheelUp:: Send("{Volume_Up}")
-; #WheelDown:: Send("{Volume_Down}")
+
+#WheelUp:: Send("{Volume_Up}")
+#WheelDown:: Send("{Volume_Down}")
 
 Pause:: { ; Put PC in sleep mode
-  Run(nircmd " standby")
   Run(nircmd " emptybin")
+  Run(nircmd " standby")
 }
 
 ScrollLock:: { ; Switch between displays
@@ -56,7 +57,7 @@ ScrollLock:: { ; Switch between displays
 ; Actions
 ; -------------------------------------------------------------------------------
 #HotIf WinActive("ahk_exe Chrome.exe")
-; #Ins:: UploadTweeterVideos()
+#Ins:: UploadTweeterVideos()
 ; #Ins:: UploadRumbleVideos()
 ; #Del:: DeleteTweeterPosts()
 ; #Del:: DeleteRumbleVideos()
@@ -70,22 +71,33 @@ ReplyTwitterImages() {
   folderPath := DirSelect("d:\Pictures\Twitter", 0)
   if (folderPath == "")
     return
+  SetWorkingDir(folderPath)
   count := 0
-  loop files folderPath "\*.png" ; Count total number of images
+  loop files "*.png" ; Count total number of images
     count++
   ShowMessageBox("Found " count " images")
   SplitPath(folderPath, &folderName, &OutDir, &OutExtension, &OutNameNoExt, &OutDrive)
   if (folderName == "")
     return
-  loop files folderPath "\*.png" { ; Loop through all images in the folder
+  wc := WinClip()
+  loop files "*.png" { ; Loop through all images in the folder
     ShowMessageBox("Posting image " A_Index " of " count)
-    wc := WinClip()
+    if (folderName = "Globalists.UN") {
+      A_Clipboard := "UN IS A NAZI TERRORIST CULT THAT NOT ONLY FUNDS HAMAS, HEZBOLLAH AND PALESTINIAN TERRORISTS, BUT ALSO SENT ITS OPERATIVES TO CARRY OUT THE OCTOBER 7 ATTACK ON ISRAELI CIVILIANS`n#DefundUN #DefundUNRWA #DefundUNIFIL #DefundUNHCR #DefundUNHumanRights #DefundUNICEF #DefundUNWomen"
+      Send("^v")
+      Sleep(100)
+    }
+    if (folderName = "Globalists.UNRWA") {
+      A_Clipboard := "UNRWA IS AN ISLAMOFASCIST CULT THAT NOT ONLY FUNDS HAMAS, HEZBOLLAH AND PALESTINIAN TERRORISTS, BUT ALSO SENT ITS OPERATIVES TO CARRY OUT THE OCTOBER 7 ATTACK ON ISRAELI CIVILIANS`n#DefundUN #DefundUNRWA #DefundUNIFIL #DefundUNHCR #DefundUNHumanRights #DefundUNICEF #DefundUNWomen"
+      Send("^v")
+      Sleep(100)
+    }
     wc.Clear()
-    wc.SetBitmap(A_LoopFileFullPath)
+    wc.SetBitmap(A_LoopFileName)
     wc.Paste()
     Sleep(1000)
     Send("^{Enter}")
-    Sleep(3000)
+    Sleep(2000)
   }
   ShowMessageBox("Task completed")
   Reload()
@@ -100,7 +112,7 @@ ReplyTwitterVideos() {
     Send("^v")
     Sleep(100)
     Send("^{Enter}")
-    Sleep(1000)
+    Sleep(2000)
   }
   ShowMessageBox("Task completed")
   Reload()
@@ -108,23 +120,23 @@ ReplyTwitterVideos() {
 
 UploadTweeterVideos() {
   folderPath := DirSelect("d:\Videos\Twitter", 0) ; Upload videos from this folder
+  SetWorkingDir(folderPath)
   count := 0 ; Count number of files in that folder
-  loop files folderPath "\*.mp4" ; Count total number of videos
+  loop files "*.mp4" ; Count total number of videos
     count++
   ShowMessageBox("Found " count " videos")
-  firstTime := true
-  loop files folderPath "\*.mp4" { ; Loop through all videos in the folder
+  wc := WinClip()
+  loop files "*.mp4" { ; Loop through all videos in the folder
     ShowMessageBox("Uploading `"" A_LoopFileName "`"")
     A_Clipboard := SubStr(StrReplace(A_LoopFileName, ".mp4", ""), 7)
     Send("^v")
     Sleep(1000)
-    wc := WinClip()
     wc.Clear()
     wc.SetFiles(A_LoopFileFullPath)
     wc.Paste()
     Sleep(1000)
     Send("^{Enter}")
-    while (PixelGetColor(1125, 265) != 0x8DCDF7) { ; Wait for "Post" button to appear
+    while (PixelGetColor(1130, 250) != 0x8DCCF7) { ; Wait for "Post" button to appear
       ShowMessageBox("Uploading `"" A_LoopFileName "`"")
       Sleep(1000)
     }
@@ -136,11 +148,12 @@ UploadTweeterVideos() {
 
 UploadRumbleVideos() {
   folderPath := DirSelect("d:\Videos\Rumble", 0) ; Upload videos from this folder
+  SetWorkingDir(folderPath)
   totalVideos := 0 ; Count number of files in that folder
-  loop files folderPath "\*.mp4" ; Count total number of videos
+  loop files "*.mp4" ; Count total number of videos
     totalVideos++
   ShowMessageBox("Found " totalVideos " videos")
-  loop files folderPath "\*.mp4" { ; Loop through all videos in the folder
+  loop files "*.mp4" { ; Loop through all videos in the folder
     ShowMessageBox("Uploading `"" A_LoopFileName "`"")
     Click(1757, 154) ; Click Upload button
     Sleep(1000)
@@ -148,7 +161,7 @@ UploadRumbleVideos() {
     Sleep(1000)
     Click(517, 540) ; Click Upload area
     Sleep(2000)
-    A_Clipboard := A_LoopFileFullPath
+    A_Clipboard := A_LoopFileName
     Send("^v") ; Enter vide file name to upload
     Sleep(1000)
     Send("{Enter}") ; Click Enter to upload
@@ -166,7 +179,7 @@ UploadRumbleVideos() {
     Sleep(100)
     Click(1455, 685) ; Click thumbnail upload area
     Sleep(2000)
-    A_Clipboard := StrReplace(A_LoopFileFullPath, ".mp4", ".png")
+    A_Clipboard := StrReplace(A_LoopFileName, ".mp4", ".png")
     Send("^v") ; Enter thumbnail file name to upload
     Sleep(1000)
     Send("{Enter}") ; Click Enter to upload
