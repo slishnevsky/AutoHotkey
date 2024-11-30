@@ -10,6 +10,7 @@
 ; Replacements
 ; -------------------------------------------------------------------------------
 ::its::it's
+::isnt::isn't
 ::cant::can't
 ::couldnt::couldn't
 ::dont::don't
@@ -30,15 +31,15 @@
 ; -------------------------------------------------------------------------------
 
 ~Esc:: {
-  Reload()
   Run("nircmd/nircmd.exe emptybin")
+  Reload()
 }
 
 ; SetCapsLockState("AlwaysOff") ; Turns Off CapsLock key
-; Control volume
 
-#WheelUp:: Send("{Volume_Up}")
-#WheelDown:: Send("{Volume_Down}")
+; Control volume
+; #WheelUp:: Send("{Volume_Up}")
+; #WheelDown:: Send("{Volume_Down}")
 
 Pause:: { ; Put PC in sleep mode
   Run("nircmd/nircmd.exe emptybin")
@@ -66,6 +67,8 @@ ScrollLock:: { ; Switch between displays
 ^Ins:: ReplyTwitterVideos()
 #HotIf
 
+MESSAGE := "#ICC, #UN, #UNRWA, #UNHCR, #UNOCHA, #UNICEF ARE ISLAMOFASCIST FILTH, THAT NOT ONLY FUNDED PALESTINIAN TERRORISTS, HAMAS AND HEZBOLLAH, BUT ALSO ORCHESTRATED AND SUPPORTED THE OCTOBER 7 MASSACRE OF ISRAELI CIVILIANS!`n"
+
 ReplyTwitterImages() {
   folderPath := DirSelect("d:\Pictures\Twitter", 0)
   if (folderPath == "")
@@ -78,19 +81,28 @@ ReplyTwitterImages() {
   SplitPath(folderPath, &folderName, &OutDir, &OutExtension, &OutNameNoExt, &OutDrive)
   if (folderName == "")
     return
+
+  A_Clipboard := MESSAGE twitterIslam[1]
+  Send("^v")
+  Sleep(100)
+  Send("^{Enter}")
+  Sleep(2000)
+    
+
+  A_Clipboard := MESSAGE twitterIslam[2]
+  Send("^v")
+  Sleep(100)
+  Send("^{Enter}")
+  Sleep(2000)
+
   wc := WinClip()
   loop files "*.png" { ; Loop through all images in the folder
     ShowMessageBox("Posting image " A_Index " of " count)
-    if (folderName = "Globalists.UN") {
-      A_Clipboard := "UN IS A NAZI TERRORIST CULT THAT NOT ONLY FUNDS HAMAS, HEZBOLLAH AND PALESTINIAN TERRORISTS, BUT ALSO SENT ITS OPERATIVES TO CARRY OUT THE OCTOBER 7 ATTACK ON ISRAELI CIVILIANS`n#DefundUN #DefundUNRWA #DefundUNIFIL #DefundUNHCR #DefundUNHumanRights #DefundUNICEF #DefundUNWomen"
-      Send("^v")
-      Sleep(100)
-    }
-    if (folderName = "Globalists.UNRWA") {
-      A_Clipboard := "UNRWA IS AN ISLAMOFASCIST CULT THAT NOT ONLY FUNDS HAMAS, HEZBOLLAH AND PALESTINIAN TERRORISTS, BUT ALSO SENT ITS OPERATIVES TO CARRY OUT THE OCTOBER 7 ATTACK ON ISRAELI CIVILIANS`n#DefundUN #DefundUNRWA #DefundUNIFIL #DefundUNHCR #DefundUNHumanRights #DefundUNICEF #DefundUNWomen"
-      Send("^v")
-      Sleep(100)
-    }
+
+    A_Clipboard := MESSAGE
+    Send("^v")
+    Sleep(100)
+
     wc.Clear()
     wc.SetBitmap(A_LoopFileName)
     wc.Paste()
@@ -103,15 +115,14 @@ ReplyTwitterImages() {
 }
 
 ReplyTwitterVideos() {
-  category := SelectCategory()
-  posts := category.values
+  posts := twitterIslam ; Chose what data to post
   loop posts.Length { ; Loop through all posts in array
     ShowMessageBox("Posting video " A_Index " of " posts.Length)
-    A_Clipboard := posts[A_Index]
+    A_Clipboard := MESSAGE posts[A_Index]
     Send("^v")
-    Sleep(100)
+    Sleep(1000)
     Send("^{Enter}")
-    Sleep(2000)
+    Sleep(1000)
   }
   ShowMessageBox("Task completed")
   Reload()
