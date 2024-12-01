@@ -1,10 +1,9 @@
 #Requires AutoHotkey v2
 #Warn ; Recommended for catching common errors
 #SingleInstance force ; Ensures only one instance of the script is running
-#Include "Automator.Lib.ahk" ; External library
-#Include "Automator.Data.ahk" ; Data file
 #Include "Libs\WinClip.ahk"  ; WinClip external library
 #Include "Libs\WinClipAPI.ahk" ; WinClip external library
+#Include "TwitterPosts.ahk" ; Data file
 
 ; -------------------------------------------------------------------------------
 ; Replacements
@@ -25,6 +24,7 @@
 ::wont::won't
 ::wouldnt::wouldn't
 ::shouldnt::shouldn't
+::lets::let's
 
 ; -------------------------------------------------------------------------------
 ; General actions
@@ -34,30 +34,68 @@
   Run("nircmd/nircmd.exe emptybin")
   Reload()
 }
-
-; SetCapsLockState("AlwaysOff") ; Turns Off CapsLock key
-
-; Control volume
-; #WheelUp:: Send("{Volume_Up}")
-; #WheelDown:: Send("{Volume_Down}")
-
+SetCapsLockState("AlwaysOff") ; Turns off CapsLock key
+#WheelUp:: Send("{Volume_Up}") ; Volume up
+#WheelDown:: Send("{Volume_Down}") ; Volume down
 Pause:: { ; Put PC in sleep mode
   Run("nircmd/nircmd.exe emptybin")
-  Run("nircmd/nircmd.exe standby")
+  Run("nircmd/nircmd.exe standby") 
 }
-
 ScrollLock:: { ; Switch between displays
   static state := false
-  Run(state ? "DisplaySwitch.exe /internal" : "DisplaySwitch.exe /external")
+  Run(state ? "displayswitch.exe /internal" : "displayswitch.exe /external")
   ; Run(state ? "nircmd/nircmd.exe setprimarydisplay 1" : "nircmd/nircmd.exe setprimarydisplay 2")
   state := !state
+}
+
+; -------------------------------------------------------------------------------
+; Folder selection window
+; -------------------------------------------------------------------------------
+SelectTwitterPosts() {
+  global window := Gui("AlwaysOnTop")
+  window.SetFont("s10", "Bahnschrift")
+  window.AddText(, "Select category")
+  categories := [] ; Create a new array to hold the names
+  for item in twitterPosts { ; Loop through each object in the array and add the 'name' property to the 'names' array
+    categories.Push(item.category)
+  }
+  category := ""
+  listbox := window.AddListBox("r" categories.Length " Choose1 w200", categories)
+  listbox.OnEvent("DoubleClick", (*) => (
+    category := listbox.Text
+    window.Hide()))
+  button := window.AddButton("Default w80", "OK")
+  button.OnEvent("Click", (*) => (
+    category := listbox.Text
+    window.Hide()))
+  window.Show()
+  WinWaitClose(window)
+  for item in twitterPosts {
+    if (item.category == category) {
+      return item.posts
+    }
+  }
+  return
+}
+
+; -------------------------------------------------------------------------------
+; ShowMessageBox
+; -------------------------------------------------------------------------------
+ShowMessageBox(message) {
+  messageBox := Gui("-Caption")
+  messageBox.BackColor := "0E639C"
+  messageBox.SetFont("s20 cWhite", "Bahnschrift")
+  messageBox.AddText("Center", message)
+  messageBox.Show()
+  Sleep(1000)
+  messageBox.Hide()
 }
 
 ; -------------------------------------------------------------------------------
 ; Actions
 ; -------------------------------------------------------------------------------
 #HotIf WinActive("ahk_exe Chrome.exe")
-#Ins:: UploadTweeterVideos()
+; #Ins:: UploadTweeterVideos()
 ; #Ins:: UploadRumbleVideos()
 ; #Del:: DeleteTweeterPosts()
 ; #Del:: DeleteRumbleVideos()
@@ -66,8 +104,6 @@ ScrollLock:: { ; Switch between displays
 +Ins:: ReplyTwitterImages()
 ^Ins:: ReplyTwitterVideos()
 #HotIf
-
-MESSAGE := "#ICC, #UN, #UNRWA, #UNHCR, #UNOCHA, #UNICEF ARE ISLAMOFASCIST FILTH, THAT NOT ONLY FUNDED PALESTINIAN TERRORISTS, HAMAS AND HEZBOLLAH, BUT ALSO ORCHESTRATED AND SUPPORTED THE OCTOBER 7 MASSACRE OF ISRAELI CIVILIANS!`n"
 
 ReplyTwitterImages() {
   folderPath := DirSelect("d:\Pictures\Twitter", 0)
@@ -81,48 +117,20 @@ ReplyTwitterImages() {
   SplitPath(folderPath, &folderName, &OutDir, &OutExtension, &OutNameNoExt, &OutDrive)
   if (folderName == "")
     return
-
-  A_Clipboard := MESSAGE twitterIslam[1]
-  Send("^v")
-  Sleep(100)
-  Send("^{Enter}")
-  Sleep(2000)
-    
-
-  A_Clipboard := MESSAGE twitterIslam[2]
-  Send("^v")
-  Sleep(100)
-  Send("^{Enter}")
-  Sleep(2000)
-
   wc := WinClip()
   loop files "*.png" { ; Loop through all images in the folder
     ShowMessageBox("Posting image " A_Index " of " count)
-
-    A_Clipboard := MESSAGE
-    Send("^v")
-    Sleep(100)
-
-    wc.Clear()
-    wc.SetBitmap(A_LoopFileName)
-    wc.Paste()
-    Sleep(1000)
-    Send("^{Enter}")
-    Sleep(2000)
+    wc.Clear(), wc.SetBitmap(A_LoopFileName), wc.Paste(), Sleep(1000), Send("^{Enter}"), Sleep(2000)
   }
   ShowMessageBox("Task completed")
   Reload()
 }
 
 ReplyTwitterVideos() {
-  posts := twitterIslam ; Chose what data to post
+  posts := SelectTwitterPosts()
   loop posts.Length { ; Loop through all posts in array
     ShowMessageBox("Posting video " A_Index " of " posts.Length)
-    A_Clipboard := MESSAGE posts[A_Index]
-    Send("^v")
-    Sleep(1000)
-    Send("^{Enter}")
-    Sleep(1000)
+    A_Clipboard := posts[A_Index], Send("^v"), Sleep(1000), Send("^{Enter}"), Sleep(1000)
   }
   ShowMessageBox("Task completed")
   Reload()
@@ -138,20 +146,13 @@ UploadTweeterVideos() {
   wc := WinClip()
   loop files "*.mp4" { ; Loop through all videos in the folder
     ShowMessageBox("Uploading `"" A_LoopFileName "`"")
-    A_Clipboard := SubStr(StrReplace(A_LoopFileName, ".mp4", ""), 7)
-    Send("^v")
-    Sleep(1000)
-    wc.Clear()
-    wc.SetFiles(A_LoopFileFullPath)
-    wc.Paste()
-    Sleep(1000)
-    Send("^{Enter}")
+    fileName := SubStr(StrReplace(A_LoopFileName, ".mp4", ""), 7)
+    A_Clipboard := fileName, Send("^v"), Sleep(1000), wc.Clear(), wc.SetFiles(A_LoopFileFullPath), wc.Paste(), Sleep(1000), Send("^{Enter}")
     while (PixelGetColor(1130, 250) != 0x8DCCF7) { ; Wait for "Post" button to appear
       ShowMessageBox("Uploading `"" A_LoopFileName "`"")
       Sleep(1000)
     }
-    Send("{Tab 2}")
-    Sleep(2000)
+    Send("{Tab 2}"), Sleep(2000)
   }
   ShowMessageBox("Task completed")
 }
@@ -165,30 +166,16 @@ UploadRumbleVideos() {
   ShowMessageBox("Found " totalVideos " videos")
   loop files "*.mp4" { ; Loop through all videos in the folder
     ShowMessageBox("Uploading `"" A_LoopFileName "`"")
-    Click(1757, 154) ; Click Upload button
-    Sleep(1000)
-    Click(1757, 223) ; Select Upload option
-    Sleep(1000)
-    Click(517, 540) ; Click Upload area
-    Sleep(2000)
-    A_Clipboard := A_LoopFileName
-    Send("^v") ; Enter vide file name to upload
-    Sleep(1000)
-    Send("{Enter}") ; Click Enter to upload
-    Sleep(1000)
+    Click(1757, 154), Sleep(1000) ; Click Upload button
+    Click(1757, 223), Sleep(1000) ; Select Upload option
+    Click(517, 540), Sleep(2000) ; Click Upload area
+    A_Clipboard := A_LoopFileName, Send("^v"), Sleep(1000), Send("{Enter}"), Sleep(1000)  ; Enter vide file name to upload
     Send("{Tab}")
     Sleep(1000)
-    A_Clipboard := SubStr(StrReplace(A_LoopFileName, ".mp4", ""), 7)
-    Send("^v") ; Enter video title
-    Sleep(1000)
-    Send("{Tab 2}")
-    Sleep(100)
-    Send("{Up}")
-    Sleep(100)
-    Send("{Enter}") ; Click Enter to select category
-    Sleep(100)
-    Click(1455, 685) ; Click thumbnail upload area
-    Sleep(2000)
+    fileName := SubStr(StrReplace(A_LoopFileName, ".mp4", ""), 7)
+    A_Clipboard := fileName, Send("^v"), Sleep(1000) ; Enter video title
+    Send("{Tab 2}"), Sleep(100), Send("{Up}"), Sleep(100), Send("{Enter}"), Sleep(100) ; Click Enter to select category
+    Click(1455, 685), Sleep(2000) ; Click thumbnail upload area
     A_Clipboard := StrReplace(A_LoopFileName, ".mp4", ".png")
     Send("^v") ; Enter thumbnail file name to upload
     Sleep(1000)
