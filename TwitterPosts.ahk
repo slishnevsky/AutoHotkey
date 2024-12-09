@@ -3,6 +3,7 @@ twitterPosts := [{
   posts: [
     "https://rumble.com/v5sglwn-standing-against-injustice-benjamin-netanyahus-message-to-the-world.html",
     "https://rumble.com/v5tshdn-where-was-the-red-cross-where-was-the-un-demanding...-access-to-us-freed-ho.html",
+    "https://rumble.com/v5wblab-where-were-you-on-oct-7-when-hamas-mobilized-and-executed-a-mass-murder-and.html",
     "https://rumble.com/v5kmlkc-soviet-russia-the-creator-of-the-plo-and-the-palestinian-people.html",
     "https://rumble.com/v5kmlf1-how-innocent-palestinians-brutally-raped-burned-beheaded-and-mutilated-jews.html",
     "https://rumble.com/v5kml19-palestinian-terrorists-preparing-victims-for-western-media.html",
@@ -70,13 +71,21 @@ twitterPosts := [{
 }, {
   category: "Ezra",
   posts: [
-    "https://x.com/dpenetration25/status/1862829597642850620", ; 001 - Ezra Mor. Coincidence. I don't think so..mp4
-    "https://x.com/dpenetration25/status/1862829693193322608", ; 002 - Ezra Mor. Three Palestinian children for the price of one..mp4
-    "https://x.com/dpenetration25/status/1862829811728572478", ; 003 - Ezra Mor. The Amazing Pan-Arab World..mp4
-    "https://x.com/dpenetration25/status/1862829897850278291", ; 004 - Ezra Mor. The unsophisticated nature of the Arab-Israeli conflict..mp4
-    "https://x.com/dpenetration25/status/1862830007145378193", ; 005 - Ezra Mor. Propaganda - Ideological cliché..mp4
-    "https://x.com/dpenetration25/status/1862830107196354991", ; 006 - Ezra Mor. Israel oppresses the UN..mp4
-    "https://x.com/dpenetration25/status/1862830213110902926", ; 007 - Ezra Mor. Who is Antonio Guterres mourning for..mp4
-    "https://x.com/dpenetration25/status/1862830326856221090", ; 008 - Ezra Mor. The worst genocide in history..mp4
+    "https://x.com/dpenetration25/status/1863264113280856167", ; 001 - Ezra Mor. Coincidence. I don't think so..mp4
+    "https://x.com/dpenetration25/status/1863264217618419909", ; 002 - Ezra Mor. Three Palestinian children for the price of one..mp4
+    "https://x.com/dpenetration25/status/1863264330801627226", ; 003 - Ezra Mor. The Amazing Pan-Arab World..mp4
+    "https://x.com/dpenetration25/status/1863264419309904040", ; 004 - Ezra Mor. The unsophisticated nature of the Arab-Israeli conflict..mp4
+    "https://x.com/dpenetration25/status/1863264545260666940", ; 005 - Ezra Mor. Propaganda - Ideological cliché..mp4
+    "https://x.com/dpenetration25/status/1863264646288851291", ; 006 - Ezra Mor. Israel oppresses the UN..mp4
+    "https://x.com/dpenetration25/status/1863264760063488237", ; 007 - Ezra Mor. Who is Antonio Guterres mourning for..mp4
+    "https://x.com/dpenetration25/status/1863264853592285690", ; 008 - Ezra Mor. The worst genocide in history..mp4
+  ]
+}, {
+  category: "Guterres",
+  posts: [
+    "https://rumble.com/v5v85pb-breaking-news-antonio-guterres.html",
+    "https://rumble.com/v5sglwn-standing-against-injustice-benjamin-netanyahus-message-to-the-world.html",
+    "https://rumble.com/v5tshdn-where-was-the-red-cross-where-was-the-un-demanding...-access-to-us-freed-ho.html",
+    "https://rumble.com/v5v84lb-doron-spielman-calls-out-unrwas-collusion-with-hamas.-unrwa-must-be-shut-do.html",
   ]
 }]
